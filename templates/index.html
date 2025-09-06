@@ -1007,6 +1007,7 @@
 
     const WS_URL = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws';
     let ws, connected = false, abortStream = false, currentSessionId = null, currentReqId = null;
+    let sseAbortCtrl = null; // AbortController for SSE requests
     let botMessageElement = null; // Reference to the current bot message element
     let reconnectAttempts = 0;
     let reconnectTimeout = null;
@@ -1693,6 +1694,9 @@ const chipOps = document.getElementById('chipOps');
     stopBtn.addEventListener('click', () => { 
       abortStream = true; 
       try { if (ws && connected && currentReqId) { ws.send(JSON.stringify({ type: 'cancel', id: currentReqId })); } } catch(e) {}
+      // Abort SSE if active
+      try { if (sseAbortCtrl) { sseAbortCtrl.abort(); } } catch(e) {}
+      sseAbortCtrl = null;
       if (typingIndicator && typingIndicator.parentNode) {
         typingIndicator.parentNode.removeChild(typingIndicator);
       }
@@ -1838,13 +1842,24 @@ if (useSSE) {
               max_tokens: parseInt(maxTokens.value,10),
               bot_id: (botSelect?.value||'')
             }));
-            const resp = await fetch(`/sse?${params.toString()}`);
-            if(!resp.ok){ toast('SSE start failed','error'); disableUI(false); return; }
+            const ac = new AbortController();
+            sseAbortCtrl = ac;
+            const resp = await fetch(`/sse?${params.toString()}`, { signal: ac.signal, headers: { 'Accept': 'text/event-stream' } });
+            if(!resp.ok){ toast('SSE start failed','error'); disableUI(false); sseAbortCtrl = null; return; }
             const reader = resp.body.getReader();
             const dec = new TextDecoder();
             while(true){ const {value, done} = await reader.read(); if(done) break; const textChunk = dec.decode(value); textChunk.split('\n\n').forEach(frame=>{ const m = frame.match(/^event: (\w+)\ndata: (.*)$/s); if(!m) return; const ev = m[1]; const data = m[2]; if(ev==='delta'){ const j=JSON.parse(data); if(!botMessageElement) botMessageElement = appendMsg('bot',''); updateMsg(botMessageElement, j.delta||''); } }); }
+            sseAbortCtrl = null;
             disableUI(false); input.focus();
-          }catch(e){ toast('SSE error','error'); disableUI(false); }
+          }catch(e){ 
+            if (e && (e.name === 'AbortError' || e.code === 20)) {
+              toast('SSE cancelled','warning');
+            } else {
+              toast('SSE error','error'); 
+            }
+            sseAbortCtrl = null;
+            disableUI(false); 
+          }
         })();
         return;
       }
