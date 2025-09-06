@@ -1006,7 +1006,7 @@
     const botClose = document.getElementById('botClose');
 
     const WS_URL = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws';
-    let ws, connected = false, abortStream = false, currentSessionId = null;
+    let ws, connected = false, abortStream = false, currentSessionId = null, currentReqId = null;
     let botMessageElement = null; // Reference to the current bot message element
     let reconnectAttempts = 0;
     let reconnectTimeout = null;
@@ -1692,6 +1692,7 @@ const chipOps = document.getElementById('chipOps');
     
     stopBtn.addEventListener('click', () => { 
       abortStream = true; 
+      try { if (ws && connected && currentReqId) { ws.send(JSON.stringify({ type: 'cancel', id: currentReqId })); } } catch(e) {}
       if (typingIndicator && typingIndicator.parentNode) {
         typingIndicator.parentNode.removeChild(typingIndicator);
       }
@@ -1813,7 +1814,10 @@ function submitMessage(){
       disableUI(true); 
       abortStream = false;
 
+      const reqId = Date.now().toString();
+      currentReqId = reqId;
       const payload = {
+        id: reqId,
         message: text,
         stream: streamChk.checked,
         provider: providerSel.value,
@@ -1898,6 +1902,7 @@ if (useSSE) {
           currentTranscript.push({ role: 'bot', text: botMessageElement.textContent || '' }); 
           botMessageElement = null;
         }
+        currentReqId = null;
         disableUI(false); 
         input.focus(); 
         

@@ -101,10 +101,37 @@ async def ws(websocket: WebSocket):
                 if is_json and data.get("stream"):
                     # Inform client streaming has started
                     await websocket.send_json({"stream": True, "done": False})
-                    # True provider streaming
-                    async for delta in stream_agent(message, meta):
-                        await websocket.send_json({"delta": delta})
-                    await websocket.send_json({"done": True})
+
+                    # Minimal cancel support: listen for a {type:"cancel"} control frame while streaming
+                    cancel_event = asyncio.Event()
+
+                    async def listen_cancel():
+                        while True:
+                            try:
+                                raw_ctrl = await websocket.receive_text()
+                                try:
+                                    ctrl = json.loads(raw_ctrl)
+                                except Exception:
+                                    continue
+                                if isinstance(ctrl, dict) and ctrl.get("type") == "cancel":
+                                    cancel_event.set()
+                                    break
+                            except WebSocketDisconnect:
+                                break
+                            except Exception:
+                                # Ignore malformed or unexpected frames while streaming
+                                continue
+
+                    listener_task = asyncio.create_task(listen_cancel())
+                    try:
+                        async for delta in stream_agent(message, meta):
+                            if cancel_event.is_set():
+                                break
+                            await websocket.send_json({"delta": delta})
+                        await websocket.send_json({"done": True})
+                    finally:
+                        if not listener_task.done():
+                            listener_task.cancel()
                 else:
                     resp = await call_agent(message, meta)
                     # Send response back to client
