@@ -9,9 +9,17 @@ from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
 import json
 from commander.routes_bots import router as bots_router
+from commander.routes_sse import router as sse_router
+from commander.routes_files import router as files_router
+from commander.routes_kb import router as kb_router
+from commander.routes_chats import router as chats_router
 
 app = FastAPI(title="Quantum Commander")
 app.include_router(bots_router)
+app.include_router(sse_router)
+app.include_router(files_router)
+app.include_router(kb_router)
+app.include_router(chats_router)
 
 # repo-root-based paths
 repo_root = pathlib.Path(__file__).resolve().parent.parent
