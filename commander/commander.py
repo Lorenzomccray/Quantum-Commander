@@ -7,8 +7,11 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
+import json
+from commander.routes_bots import router as bots_router
 
 app = FastAPI(title="Quantum Commander")
+app.include_router(bots_router)
 
 # repo-root-based paths
 repo_root = pathlib.Path(__file__).resolve().parent.parent
@@ -24,24 +27,23 @@ app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 templates_dir = repo_root / "templates"
 templates = Jinja2Templates(directory=str(templates_dir))
 
-# Try to import a project-defined make_agent; otherwise use a simple echo stub.
+# Include app.* routers (e.g., /health)
 try:
-    from .agent import make_agent as _make_agent  # type: ignore
-    make_agent = _make_agent  # re-export
+    from app.main import router as health_router  # type: ignore
+    app.include_router(health_router)
 except Exception:
-    def make_agent():
-        class _EchoAgent:
-            def run_persisted(self, message: str) -> str:
-                return f"Echo: {message}"
-        return _EchoAgent()
+    pass
 
-_AGENT = None
-
-def get_agent():
-    global _AGENT
-    if _AGENT is None:
-        _AGENT = make_agent()
-    return _AGENT
+# Try to import the async make_agent(message) -> str; otherwise provide an async echo fallback.
+try:
+    from .agent import make_agent as call_agent, stream_agent, apply_bot_overrides  # type: ignore
+except Exception:
+    async def call_agent(message: str, meta=None) -> str:
+        return f"Echo: {message}"
+    async def stream_agent(message: str, meta=None):
+        yield f"Echo: {message}"
+    def apply_bot_overrides(payload: dict):
+        return payload
 
 @app.get("/", response_class=HTMLResponse)
 async def web_ui(request: Request):
@@ -52,31 +54,62 @@ async def ws(websocket: WebSocket):
     await websocket.accept()
     try:
         while True:
-            # Receive raw text from client
+            # Receive message (JSON or plain text)
+            is_json = False
             try:
-                message = await websocket.receive_text()
+                raw = await websocket.receive_text()
+                try:
+                    data = json.loads(raw)
+                    # Apply bot overrides if available (provider/model/params/system prompt)
+                    try:
+                        data = apply_bot_overrides(data)  # type: ignore
+                    except Exception:
+                        pass
+                    message = data.get("message", "")
+                    is_json = True
+                except Exception:
+                    message = raw
             except Exception as e:
                 # Malformed frame or receive error; report and continue
                 try:
-                    await websocket.send_text(f"Error: {e}")
+                    await websocket.send_json({"error": str(e)})
                 except Exception:
                     pass
                 continue
 
             # Process the message
-            loop = asyncio.get_running_loop()
             try:
-                # One-shot response per message
-                resp = await loop.run_in_executor(None, get_agent().run_persisted, message)
+                # Build meta overrides if JSON provided
+                meta = None
+                if is_json:
+                    meta = {
+                        "provider": data.get("provider"),
+                        "model": data.get("model"),
+                        "temperature": data.get("temperature"),
+                        "max_tokens": data.get("max_tokens"),
+                        "timeout_s": data.get("timeout_s"),
+                    }
+                # One-shot or streaming response
+                if is_json and data.get("stream"):
+                    # Inform client streaming has started
+                    await websocket.send_json({"stream": True, "done": False})
+                    # True provider streaming
+                    async for delta in stream_agent(message, meta):
+                        await websocket.send_json({"delta": delta})
+                    await websocket.send_json({"done": True})
+                else:
+                    resp = await call_agent(message, meta)
+                    # Send response back to client
+                    if is_json:
+                        await websocket.send_json({"response": resp})
+                    else:
+                        await websocket.send_text(resp if isinstance(resp, str) else str(resp))
             except Exception as e:
-                resp = f"Error: {e}"
-
-            # Send raw text response back to client
-            try:
-                await websocket.send_text(resp if isinstance(resp, str) else str(resp))
-            except Exception:
-                # If sending fails, break the loop (connection likely closed)
-                break
+                # If processing failed, report error
+                try:
+                    await websocket.send_json({"error": str(e)}) if is_json else await websocket.send_text(f"Error: {e}")
+                except Exception:
+                    pass
     except WebSocketDisconnect:
         pass
 
