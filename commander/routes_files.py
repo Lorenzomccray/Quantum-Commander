@@ -19,14 +19,17 @@ def _load_meta():
         return []
 
 def _save_meta(rows):
-    META.write_text(json.dumps(rows, ensure_ascii=False, indent=2), "utf-8")
+    tmp = META.with_suffix('.tmp.json')
+    tmp.write_text(json.dumps(rows, ensure_ascii=False, indent=2), "utf-8")
+    tmp.replace(META)
 
 @router.post("/files/upload")
 async def upload(file: UploadFile = File(...)):
     max_size = int(os.environ.get("QC_MAX_UPLOAD","10485760"))
     # Some servers may not set size; enforce a best-effort stream limit
     fid = uuid.uuid4().hex
-    dest = ROOT / f"{fid}_{file.filename}"
+    safe_name = Path(file.filename).name
+    dest = ROOT / f"{fid}_{safe_name}"
     size = 0
     with dest.open("wb") as w:
         while True:
@@ -42,7 +45,7 @@ async def upload(file: UploadFile = File(...)):
                 raise HTTPException(413, "file too large")
             w.write(chunk)
     rows = _load_meta()
-    rows.insert(0, {"id": fid, "name": file.filename, "path": dest.name, "size": size, "ts": time.time()})
+    rows.insert(0, {"id": fid, "name": safe_name, "path": dest.name, "size": size, "ts": time.time()})
     _save_meta(rows)
     return {"ok": True, "file": rows[0]}
 

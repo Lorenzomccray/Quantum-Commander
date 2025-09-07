@@ -2,10 +2,12 @@
 import asyncio
 import os
 import pathlib
+import logging
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import json
 from commander.routes_bots import router as bots_router
@@ -15,11 +17,23 @@ from commander.routes_kb import router as kb_router
 from commander.routes_chats import router as chats_router
 
 app = FastAPI(title="Quantum Commander")
+# Restrictive CORS: allow only same-origin localhost access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:8000", "http://localhost:8000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(bots_router)
 app.include_router(sse_router)
 app.include_router(files_router)
 app.include_router(kb_router)
 app.include_router(chats_router)
+
+# Logger
+log = logging.getLogger("qc")
+if not log.handlers:
+    logging.basicConfig(level=os.environ.get("QC_LOG_LEVEL", "INFO"))
 
 # repo-root-based paths
 repo_root = pathlib.Path(__file__).resolve().parent.parent
@@ -100,6 +114,7 @@ async def ws(websocket: WebSocket):
                     }
                 # One-shot or streaming response
                 if is_json and data.get("stream"):
+                    log.info("ws_stream_start", extra={"message": message[:80]})
                     # Inform client streaming has started
                     await websocket.send_json({"stream": True, "done": False})
 
@@ -114,7 +129,7 @@ async def ws(websocket: WebSocket):
                                     ctrl = json.loads(raw_ctrl)
                                 except Exception:
                                     continue
-                                if isinstance(ctrl, dict) and ctrl.get("type") == "cancel":
+                                if isinstance(ctrl, dict) and ctrl.get("type") == "cancel" and ctrl.get("id") == data.get("id"):
                                     cancel_event.set()
                                     break
                             except WebSocketDisconnect:
@@ -127,9 +142,11 @@ async def ws(websocket: WebSocket):
                     try:
                         async for delta in stream_agent(message, meta):
                             if cancel_event.is_set():
+                                log.info("ws_stream_cancel")
                                 break
                             await websocket.send_json({"delta": delta})
                         await websocket.send_json({"done": True})
+                        log.info("ws_stream_done")
                     finally:
                         if not listener_task.done():
                             listener_task.cancel()

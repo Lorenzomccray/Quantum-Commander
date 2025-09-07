@@ -1865,6 +1865,20 @@ if (useSSE) {
                   const j=JSON.parse(data);
                   if(!botMessageElement) botMessageElement = appendMsg('bot','');
                   updateMsg(botMessageElement, j.delta||'');
+                } else if (ev==='done') {
+                  if (botMessageElement) {
+                    currentTranscript.push({ role: 'bot', text: botMessageElement.textContent || '' });
+                    botMessageElement = null;
+                  }
+                  currentReqId = null;
+                  disableUI(false);
+                  input.focus();
+                  // Auto-save after SSE done
+                  if (currentTranscript.length) {
+                    const title = (currentTranscript.find(r => r.role === 'me')?.text || 'Untitled').slice(0, 60);
+                    saveSession(title, currentTranscript);
+                  }
+                  toast('Response complete', 'success');
                 }
               }
             }
