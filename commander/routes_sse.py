@@ -1,7 +1,7 @@
 from __future__ import annotations
 from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
-from commander.agent import stream_agent, make_agent as call_agent
+from commander.agent import stream_agent, make_agent as call_agent, apply_bot_overrides
 import asyncio, json, time, uuid
 
 router = APIRouter()
@@ -17,14 +17,36 @@ async def sse(
     bot_id: str = "",
 ):
     """Server-Sent Events for a single prompt with graceful fallback when streaming is disallowed."""
+    # Apply bot overrides to payload (provider/model/params/system prompt)
+    payload = {
+        "message": message,
+        "provider": provider,
+        "model": model,
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+        "bot_id": bot_id,
+    }
+    try:
+        payload = apply_bot_overrides(payload)
+    except Exception:
+        pass
+
+    # Extract possibly overridden values
+    message = payload.get("message", message)
+    provider = payload.get("provider", provider)
+    model = payload.get("model", model)
+    temperature = float(payload.get("temperature", temperature))
+    max_tokens = int(payload.get("max_tokens", max_tokens))
+    sys_prompt = payload.get("system_prompt")
+
     meta = {
         "provider": provider,
         "model": model,
         "temperature": temperature,
         "max_tokens": max_tokens,
     }
-    if bot_id:
-        meta["bot_id"] = bot_id
+    if sys_prompt:
+        meta["system_prompt"] = sys_prompt
 
     async def eventgen():
         req_id = uuid.uuid4().hex

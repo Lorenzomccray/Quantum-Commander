@@ -58,6 +58,7 @@ async def make_agent(message: str, meta: Dict[str, Any] | None = None) -> str:
     provider, client = _lazy_client(provider_override=provider_override, timeout_s=timeout_s)
     model = _model_name(provider, model_override=model_override)
     user_prompt = message
+    sys_prompt = (meta.get("system_prompt") or SYSTEM_PROMPT)
 
     try:
         if provider == "openai":
@@ -66,7 +67,7 @@ async def make_agent(message: str, meta: Dict[str, Any] | None = None) -> str:
             kwargs = {
                 "model": model,
                 "messages": [
-                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "system", "content": sys_prompt},
                     {"role": "user", "content": user_prompt},
                 ],
             }
@@ -79,7 +80,7 @@ async def make_agent(message: str, meta: Dict[str, Any] | None = None) -> str:
         if provider == "anthropic":
             resp = client.messages.create(
                 model=model,
-                system=SYSTEM_PROMPT,
+                system=sys_prompt,
                 messages=[{"role": "user", "content": user_prompt}],
                 temperature=temperature,
                 max_tokens=max_tokens,
@@ -90,7 +91,7 @@ async def make_agent(message: str, meta: Dict[str, Any] | None = None) -> str:
             resp = client.chat.completions.create(
                 model=model,
                 messages=[
-                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "system", "content": sys_prompt},
                     {"role": "user", "content": user_prompt},
                 ],
                 temperature=temperature,
@@ -115,6 +116,7 @@ async def stream_agent(message: str, meta: Dict[str, Any] | None = None):
     provider, client = _lazy_client(provider_override=provider_override, timeout_s=timeout_s)
     model = _model_name(provider, model_override=model_override)
     user_prompt = message
+    sys_prompt = (meta.get("system_prompt") or SYSTEM_PROMPT)
 
     queue: asyncio.Queue[Optional[str]] = asyncio.Queue()
     loop = asyncio.get_running_loop()
@@ -127,7 +129,7 @@ async def stream_agent(message: str, meta: Dict[str, Any] | None = None):
                 kwargs = {
                     "model": model,
                     "messages": [
-                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "system", "content": sys_prompt},
                         {"role": "user", "content": user_prompt},
                     ],
                     "stream": True,
@@ -147,7 +149,7 @@ async def stream_agent(message: str, meta: Dict[str, Any] | None = None):
                 resp = client.chat.completions.create(
                     model=model,
                     messages=[
-                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "system", "content": sys_prompt},
                         {"role": "user", "content": user_prompt},
                     ],
                     temperature=temperature,
@@ -164,7 +166,7 @@ async def stream_agent(message: str, meta: Dict[str, Any] | None = None):
             elif provider == "anthropic":
                 with client.messages.stream(
                     model=model,
-                    system=SYSTEM_PROMPT,
+                    system=sys_prompt,
                     messages=[{"role": "user", "content": user_prompt}],
                     temperature=temperature,
                     max_tokens=max_tokens,
@@ -210,11 +212,10 @@ def apply_bot_overrides(payload: dict) -> dict:
             payload.setdefault("model", b.get("model","gpt-5"))
             payload.setdefault("temperature", b.get("temperature",0.2))
             payload.setdefault("max_tokens", b.get("max_tokens",800))
-            # Prepend system prompt
-            sp = b.get("system_prompt") or ""
-            if sp:
-                msg = payload.get("message","")
-                payload["message"] = f"[SYSTEM]\n{sp}\n[/SYSTEM]\n\n{msg}"
+            # Provide system prompt natively instead of mutating message
+            sp = (b.get("system_prompt") or "").strip()
+            if sp and not payload.get("system_prompt"):
+                payload["system_prompt"] = sp
             break
     return payload
 

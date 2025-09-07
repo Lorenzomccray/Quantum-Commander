@@ -96,6 +96,7 @@ async def ws(websocket: WebSocket):
                         "temperature": data.get("temperature"),
                         "max_tokens": data.get("max_tokens"),
                         "timeout_s": data.get("timeout_s"),
+                        "system_prompt": data.get("system_prompt"),
                     }
                 # One-shot or streaming response
                 if is_json and data.get("stream"):
