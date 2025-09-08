@@ -987,6 +987,10 @@
           <span>Enable chat root exec (!root ...)</span>
           <input type="checkbox" id="chatRootExec">
         </div>
+        <div class="settings-option">
+          <span>Auto-execute on 'proceed'</span>
+          <input type="checkbox" id="autoExecuteProceed">
+        </div>
       </div>
       
       <div class="side-actions" style="margin-top: 20px;">
@@ -1193,6 +1197,8 @@
       }
       
       const m = el('div', `msg ${role}`);
+      // Store raw text for later directive parsing / auto-exec
+      try { m.dataset.raw = String(text||''); } catch(_) {}
       
       // Format message with markdown-like rendering
       const formattedText = formatMessage(text);
@@ -1555,6 +1561,7 @@
       if (settings.showTimestamps !== undefined) document.getElementById('showTimestamps').checked = settings.showTimestamps;
       if (settings.autoTransport !== undefined) document.getElementById('autoTransport').checked = settings.autoTransport;
       if (settings.chatRootExec !== undefined) document.getElementById('chatRootExec').checked = settings.chatRootExec;
+      if (settings.autoExecuteProceed !== undefined) document.getElementById('autoExecuteProceed').checked = settings.autoExecuteProceed;
       
       // Apply visual settings
       applyVisualSettings();
@@ -1571,7 +1578,8 @@
         sendWithEnter: document.getElementById('sendWithEnter').checked,
         showTimestamps: document.getElementById('showTimestamps').checked,
         autoTransport: document.getElementById('autoTransport').checked,
-        chatRootExec: document.getElementById('chatRootExec').checked
+        chatRootExec: document.getElementById('chatRootExec').checked,
+        autoExecuteProceed: document.getElementById('autoExecuteProceed').checked
       };
       
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
@@ -1615,10 +1623,126 @@
       }
     }
     
-    // Load settings on startup
-    loadSettings();
+      // Load settings on startup
+      loadSettings();
 
-    // ---------- Health: seed providers/models/temp/max_tokens ----------
+      // ---------- Auto-execute on 'proceed' ----------
+      async function runRootCmd(cmd, confirm=true){
+        const tok = (localStorage.getItem('qc.ops_token')||'').trim();
+        if (!tok){ toast('Set OPS_TOKEN in Root Ops first','warning'); return; }
+        try{
+          const r = await fetch('/ops/shell',{
+            method:'POST', headers:{'Content-Type':'application/json','X-OPS-TOKEN': tok},
+            body: JSON.stringify({ cmd, cwd: '/', env: {}, confirm: !!confirm })
+          });
+          const j = await r.json();
+          if (r.status === 412){ toast('Root command requires confirmation (server guard). Retry in Root Ops panel.','warning'); return; }
+          if (!r.ok){ throw new Error(typeof j.detail==='string'? j.detail : (j.detail? JSON.stringify(j.detail): 'root run failed')); }
+          const out = ((j.stdout||'') + (j.stderr? ('\n'+j.stderr):'')) || '[no output]';
+          appendMsg('assistant', out);
+        }catch(e){ toast('Root run failed: '+e.message,'error'); }
+      }
+
+      function autoExecuteFromLatestAssistant(){
+        try{
+          const msgs = Array.from(board.querySelectorAll('.msg'));
+          const last = [...msgs].reverse().find(m => !m.classList.contains('me'));
+          if (!last){ toast('No assistant message to act on','warning'); return; }
+          const raw = last.dataset.raw || '';
+          const codeEl = last.querySelector('pre code');
+          const codeText = codeEl ? (codeEl.textContent||'') : '';
+
+          // Parse directives
+          const mInstall = raw.match(/^EXT_INSTALL:\s*(.+)$/im);
+          const mCall = raw.match(/^EXT_CALL:\s*(.+)$/im);
+          const mRoot = raw.match(/^RUN_ROOT:\s*(.+)$/im);
+          const mUser = raw.match(/^RUN_USER:\s*(.+)$/im);
+
+          async function parseCallSpec(spec){
+            let mod = '', fn = 'main', args = [];
+            try{
+              const kv = Object.fromEntries(Array.from(spec.matchAll(/(module|mod|m|func|fn|f|args)\s*=\s*([^\s]+|\[[\s\S]*\]|\{[\s\S]*\})/gi)).map(x=>[x[1].toLowerCase(), x[2]]));
+              if (Object.keys(kv).length){
+                mod = (kv.module||kv.mod||kv.m||'').replace(/^extensions\./,'');
+                fn = (kv.func||kv.fn||kv.f||'main');
+                if (kv.args){ try{ args = JSON.parse(kv.args); }catch(_){} }
+              } else if (spec.includes(':')){
+                const parts = spec.split(':'); mod = parts[0].trim().replace(/^extensions\./,'');
+                const rest = parts.slice(1).join(':').trim();
+                const m2 = rest.match(/^(\w+)(?:.*?args\s*=\s*(\[[\s\S]*\]|\{[\s\S]*\}))?/i);
+                if (m2){ fn = m2[1]; if (m2[2]){ try{ args = JSON.parse(m2[2]); }catch(_){} } }
+              } else { mod = spec.trim().replace(/^extensions\./,''); }
+            }catch(_){ }
+            return { mod, fn, args };
+          }
+
+          // Priority: EXT install+call, else call, else RUN_ROOT, else RUN_USER
+          (async()=>{
+            try{
+              if (mInstall && mCall){
+                const name = (mInstall[1]||'').trim();
+                if (!codeText){ toast('No code block found to install','error'); return; }
+                await extInstall(name, codeText);
+                const {mod, fn, args} = await parseCallSpec((mCall[1]||''));
+                const mname = mod || name.replace(/\.py$/,'');
+                const res = await extCall(mname, fn, args);
+                toast('Installed and called','success');
+                try{ if (res && typeof res.result !== 'undefined'){ console.log('[extensions.call]', res.result); } }catch(e){}
+                return;
+              }
+              if (mCall){
+                const {mod, fn, args} = await parseCallSpec((mCall[1]||''));
+                if (!mod){ toast('EXT_CALL missing module','error'); return; }
+                const res = await extCall(mod, fn, args);
+                toast('Call ok','success');
+                try{ if (res && typeof res.result !== 'undefined'){ console.log('[extensions.call]', res.result); } }catch(e){}
+                return;
+              }
+              if (mRoot){
+                const cmd = (mRoot[1]||'').trim();
+                await runRootCmd(cmd, true);
+                return;
+              }
+              if (mUser){
+                const cmd = (mUser[1]||'').trim();
+                window.open('/user-terminal?cmd='+encodeURIComponent(cmd),'_blank');
+                return;
+              }
+              toast('No actionable directives found in last assistant message','warning');
+            }catch(e){ toast('Auto-execute failed: '+e.message,'error'); }
+          })();
+        }catch(e){ toast('Auto-execute init failed','error'); }
+      }
+
+      // Intercept send when message is exactly "proceed"
+      try{
+        sendBtn?.addEventListener('click', (e)=>{
+          try{
+            const val = (input?.value||'').trim().toLowerCase();
+            if (settings && settings.autoExecuteProceed && val === 'proceed'){
+              e.preventDefault(); e.stopImmediatePropagation();
+              appendMsg('me', 'proceed');
+              input.value='';
+              autoExecuteFromLatestAssistant();
+            }
+          }catch(_){ }
+        }, true);
+        input?.addEventListener('keydown', (e)=>{
+          try{
+            if (e.key==='Enter' && !e.shiftKey){
+              const val = (input?.value||'').trim().toLowerCase();
+              if (settings && settings.autoExecuteProceed && val === 'proceed'){
+                e.preventDefault(); e.stopPropagation();
+                appendMsg('me', 'proceed');
+                input.value='';
+                autoExecuteFromLatestAssistant();
+              }
+            }
+          }catch(_){ }
+        }, true);
+      }catch(_){ }
+
+      // ---------- Health: seed providers/models/temp/max_tokens ----------
     async function initHealth() {
       try {
         const r = await fetch('/health', { cache: 'no-store' }); 
