@@ -4,8 +4,24 @@ import threading
 import asyncio
 
 SYSTEM_PROMPT = (
-    "You are Quantum Commander. Be concise, actionable, and safe. "
-    "Use numbered steps when giving procedures."
+    "You are Quantum Commander — an interactive AI pair‑programmer and ops assistant. Be concise, actionable, and safe. "
+    "Always structure your replies to collaborate effectively: "
+    "1) Acknowledge the request and restate key intent; 2) Ask up to 3 targeted clarifying questions if requirements are ambiguous; "
+    "3) Propose a short, numbered plan; 4) Provide the minimal code or commands to achieve the goal; 5) Offer an execution directive and wait for user confirmation. "
+    "\n\nProcedures and style:\n"
+    "- Use numbered steps for procedures. Prefer least‑privilege actions and safe defaults.\n"
+    "- On Fedora Linux, prefer 'dnf' for package management.\n"
+    "- Never include secrets. Avoid destructive commands unless explicitly requested, and call out risks.\n"
+    "\n\nExecution directives understood by the UI (emit exactly one directive per action line):\n"
+    "- RUN_USER: <cmd>  — non‑root shell command (preferred when possible).\n"
+    "- RUN_ROOT: <cmd>  — root command; only emit when the user explicitly needs privileged actions.\n"
+    "- EXT_INSTALL: <name>.py  — when proposing custom code, include this line then a single code block with the full module to write.\n"
+    "- EXT_CALL: <module>:<func> args=[...]  — after installing, call a function with JSON args.\n"
+    "\nUsage guidance:\n"
+    "- For shell tasks: propose the command and include one RUN_USER/ROOT line.\n"
+    "- For custom logic: include EXT_INSTALL:<module>.py, then one fenced code block of the module, then EXT_CALL:<module>:<func> with args.\n"
+    "- After listing directives, end with: 'Say "proceed" to run.'\n"
+    "- If the user asks to 'run' without details, ask clarifying questions first; once confirmed, output directives.\n"
 )
 
 
@@ -21,7 +37,43 @@ def _lazy_client(provider_override: str | None = None, timeout_s: float | None =
     if provider == "groq":
         from groq import Groq
         return "groq", Groq(api_key=settings.GROQ_API_KEY, timeout=timeout)
+    if provider == "deepseek":
+        # DeepSeek supports an OpenAI-compatible API; use the OpenAI client with a custom base_url
+        from openai import OpenAI
+        base_url = getattr(settings, "DEEPSEEK_BASE_URL", "https://api.deepseek.com")
+        return "openai", OpenAI(api_key=settings.DEEPSEEK_API_KEY, base_url=base_url, timeout=timeout)
     raise ValueError(f"Unsupported MODEL_PROVIDER: {provider}")
+
+
+def run_once(*, provider: str, model: str, message: str, temperature: float, max_tokens: int) -> str:
+    """Synchronous helper to invoke make_agent from non-async contexts.
+    It safely creates a new event loop when needed, or runs in a background thread
+    if already inside an active loop.
+    """
+    meta: Dict[str, Any] = {
+        "provider": provider,
+        "model": model,
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+    }
+
+    async def _call():
+        return await make_agent(message, meta)
+
+    try:
+        # Prefer running directly when no loop is active in this thread
+        return asyncio.run(_call())
+    except RuntimeError:
+        # If there's already a running loop, execute in a background thread
+        result_holder: Dict[str, Any] = {}
+
+        def _runner():
+            result_holder["result"] = asyncio.run(_call())
+
+        t = threading.Thread(target=_runner, daemon=True)
+        t.start()
+        t.join()
+        return result_holder.get("result", "")
 
 
 def _model_name(provider: str, model_override: str | None = None) -> str:
@@ -31,6 +83,7 @@ def _model_name(provider: str, model_override: str | None = None) -> str:
         "openai": settings.OPENAI_MODEL,
         "anthropic": settings.ANTHROPIC_MODEL,
         "groq":   settings.GROQ_MODEL,
+        "deepseek": settings.DEEPSEEK_MODEL,
     }[provider]
 
 
@@ -45,6 +98,36 @@ def _openai_tokens_kw(model: str, max_tokens: int) -> dict:
 def _openai_use_responses(model: str) -> bool:
     m = (model or "").lower()
     return m.startswith("gpt-5") or m.startswith("o") or m.startswith("gpt-4o") or m.startswith("gpt-4.1")
+
+
+def _openai_has_responses(client) -> bool:
+    try:
+        return hasattr(client, "responses") and hasattr(client.responses, "create")
+    except Exception:
+        return False
+
+
+def _openai_resp_text(resp) -> str:
+    """Best-effort extraction of text from OpenAI Responses API objects across versions."""
+    try:
+        txt = getattr(resp, "output_text", None)
+        if txt:
+            return str(txt)
+    except Exception:
+        pass
+    # Fallback: iterate over output[].content[].text if present
+    try:
+        out = []
+        for item in getattr(resp, "output", []) or []:
+            for c in getattr(item, "content", []) or []:
+                t = getattr(c, "text", None)
+                if t:
+                    out.append(str(t))
+        if out:
+            return "".join(out)
+    except Exception:
+        pass
+    return ""
 
 
 async def make_agent(message: str, meta: Dict[str, Any] | None = None) -> str:
@@ -62,8 +145,15 @@ async def make_agent(message: str, meta: Dict[str, Any] | None = None) -> str:
 
     try:
         if provider == "openai":
-            # Chat Completions path for broad compatibility. Some newer models
-            # reject max_tokens; omit it in that case.
+            if _openai_has_responses(client):
+                # Prefer the newer Responses API when available (works across modern models)
+                resp = client.responses.create(
+                    model=model,
+                    instructions=sys_prompt,
+                    input=user_prompt,
+                )
+                return _openai_resp_text(resp).strip()
+            # Otherwise fall back to Chat Completions for broad compatibility
             kwargs = {
                 "model": model,
                 "messages": [
@@ -71,6 +161,7 @@ async def make_agent(message: str, meta: Dict[str, Any] | None = None) -> str:
                     {"role": "user", "content": user_prompt},
                 ],
             }
+            # Supply temperature/tokens only for legacy/chat-compatible models
             if not _openai_use_responses(model):
                 kwargs.update(_openai_tokens_kw(model, max_tokens))
                 kwargs["temperature"] = temperature
@@ -124,27 +215,78 @@ async def stream_agent(message: str, meta: Dict[str, Any] | None = None):
     def run_stream():
         try:
             if provider == "openai":
-                # Streaming via Chat Completions. For models that dislike max_tokens,
-                # omit it and rely on provider defaults.
-                kwargs = {
-                    "model": model,
-                    "messages": [
-                        {"role": "system", "content": sys_prompt},
-                        {"role": "user", "content": user_prompt},
-                    ],
-                    "stream": True,
-                }
-                if not _openai_use_responses(model):
-                    kwargs.update(_openai_tokens_kw(model, max_tokens))
-                    kwargs["temperature"] = temperature
-                resp = client.chat.completions.create(**kwargs)
-                for chunk in resp:
+                if _openai_has_responses(client):
+                    # Streaming with the Responses API (preferred)
+                    with client.responses.stream(
+                        model=model,
+                        instructions=sys_prompt,
+                        input=user_prompt,
+                    ) as stream:
+                        for event in stream:
+                            try:
+                                if getattr(event, "type", "") == "response.output_text.delta":
+                                    delta = getattr(event, "delta", "") or ""
+                                    if delta:
+                                        loop.call_soon_threadsafe(queue.put_nowait, delta)
+                                elif getattr(event, "type", "") == "response.error":
+                                    err = getattr(getattr(event, "error", None), "message", "")
+                                    if err:
+                                        loop.call_soon_threadsafe(queue.put_nowait, f"[agent-error] {err}")
+                            except Exception:
+                                pass
+                elif _openai_use_responses(model) and not _openai_has_responses(client):
+                    # Compatibility fallback: Responses API unavailable in client version.
+                    # Perform a non-streaming request and yield the whole text once.
                     try:
-                        delta = chunk.choices[0].delta.content or ""
+                        text = make_agent.__wrapped__(message=user_prompt, meta={
+                            "provider": "openai",
+                            "model": model,
+                            "temperature": temperature,
+                            "max_tokens": max_tokens,
+                            "system_prompt": sys_prompt,
+                        }) if hasattr(make_agent, "__wrapped__") else None
                     except Exception:
-                        delta = ""
-                    if delta:
-                        loop.call_soon_threadsafe(queue.put_nowait, delta)
+                        text = None
+                    if not text:
+                        try:
+                            # Final fallback: minimal Chat Completions without extra params
+                            resp = client.chat.completions.create(
+                                model=model,
+                                messages=[
+                                    {"role": "system", "content": sys_prompt},
+                                    {"role": "user", "content": user_prompt},
+                                ],
+                                stream=False,
+                            )
+                            text = (resp.choices[0].message.content or "")
+                        except Exception as e:
+                            loop.call_soon_threadsafe(queue.put_nowait, f"[agent-error] {type(e).__name__}: {e}")
+                            text = None
+                    if text:
+                        loop.call_soon_threadsafe(queue.put_nowait, text)
+                else:
+                    # Streaming via Chat Completions. For models that dislike max_tokens,
+                    # omit it and rely on provider defaults.
+                    kwargs = {
+                        "model": model,
+                        "messages": [
+                            {"role": "system", "content": sys_prompt},
+                            {"role": "user", "content": user_prompt},
+                        ],
+                        "stream": True,
+                    }
+                    # For chat-compatible models we can send tokens/temperature; for newer models, omit
+                    if not _openai_use_responses(model):
+                        kwargs.update(_openai_tokens_kw(model, max_tokens))
+                        kwargs["temperature"] = temperature
+                    resp = client.chat.completions.create(**kwargs)
+                    for chunk in resp:
+                        try:
+                            delta = chunk.choices[0].delta.content or ""
+                        except Exception:
+                            delta = ""
+                        if delta:
+                            loop.call_soon_threadsafe(queue.put_nowait, delta)
             elif provider == "groq":
                 resp = client.chat.completions.create(
                     model=model,
