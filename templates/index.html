@@ -750,6 +750,8 @@
           Export transcript
         </button>
         <button class="btn" id="botsBtn">🧩 Bots</button>
+        <button class="btn" id="ensembleBtn">🧠 Ensemble</button>
+        <button class="btn" id="skillsBtn">🧠 Skills</button>
         <button class="btn ghost" id="clearHistory">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M19 7L18.1327 19.1425C18.0579 20.1891 17.187 21 16.1378 21H7.86224C6.81296 21 5.94208 20.1891 5.86732 19.1425L5 7M10 11V17M14 11V17M15 7V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V7M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -771,6 +773,10 @@
         </span>
         <span class="badge">Model: <span id="modelActive">loading…</span></span>
         <span class="badge">Provider: <span id="providerActive">loading…</span></span>
+        <span class="badge" id="ensembleHdr" style="display:none">Ensemble</span>
+        <span class="badge" id="ensOverrideHdr" style="display:none">Override</span>
+        <span class="badge" id="dbHdr" title="DB backend">DB: …</span>
+        <button class="btn btn-sm" id="dbInitBtn">Init DB</button>
         <div class="spacer"></div>
         <button class="btn btn-sm" id="reconnect">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -796,6 +802,7 @@
         <button class="btn btn-sm" id="chipLegal">⚖️ Legal/Taxes</button>
         <button class="btn btn-sm" id="chipContent">🎬 Content</button>
         <button class="btn btn-sm" id="chipOps">🛠️ Ops</button>
+        <button class="btn btn-sm" id="opsBtnHead"># Root Ops</button>
       </header>
 
       <div class="board" id="board" aria-live="polite" aria-busy="false">
@@ -876,12 +883,46 @@
             </svg>
             Stop
           </button>
+          <button class="btn" id="ensPromptBtn" title="Ensemble per-message settings" style="display:none">⚙️</button>
         </div>
       </div>
     </section>
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <div id="dbModal" class="settings-modal"><div class="settings-content" style="max-width:780px">
+    <div class="settings-header"><h2>Supabase status</h2><button class="settings-close" id="dbClose">×</button></div>
+    <div class="settings-group">
+      <h3 class="settings-group-title">Status</h3>
+      <pre id="dbStatus" style="background:#0a0e14;border:1px solid #1e2630;color:#e6e6e6;border-radius:8px;padding:8px;max-height:260px;overflow:auto"></pre>
+    </div>
+    <div class="settings-group">
+      <h3 class="settings-group-title">Create tables (copy & run in Supabase SQL)</h3>
+      <textarea id="dbSQL" rows="10" style="width:100%;background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:8px;padding:8px"></textarea>
+      <div class="settings-option"><button class="btn" id="dbCopy">Copy SQL</button><button class="btn" id="dbRefresh">Refresh</button><button class="btn" id="dbOpen">Open dashboard</button></div>
+    </div>
+  </div></div>
+
+  <div id="opsModal" class="settings-modal"><div class="settings-content" style="max-width:760px">
+    <div class="settings-header"><h2>Root Ops</h2><button class="settings-close" id="opsClose">×</button></div>
+    <div class="settings-group">
+      <h3 class="settings-group-title">Token</h3>
+      <div class="settings-option"><span>OPS_TOKEN</span><input id="opsToken" type="password" placeholder="Paste token" style="background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:6px;padding:6px;width:320px"></div>
+      <div class="settings-option"><button class="btn primary" id="opsSave">Save</button><button class="btn" id="opsTest">Test</button><small id="opsStatus" style="margin-left:8px;color:#9aa0a6"></small></div>
+    </div>
+    <div class="settings-group">
+      <h3 class="settings-group-title">Run command as root</h3>
+      <div class="settings-option" style="align-items:flex-start"><span>Command</span><textarea id="opsCmd" rows="3" style="flex:1;background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:6px;padding:8px;width:100%" placeholder="id"></textarea></div>
+      <div class="settings-option"><label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="opsConfirm"> I understand and confirm if the command is destructive</label><div style="display:flex;gap:8px"><button class="btn primary" id="opsRun">Run</button><button class="btn" id="opsOpenTerm">Open full terminal</button></div></div>
+      <div class="settings-option" style="align-items:flex-start"><span>Output</span><pre id="opsOut" style="flex:1;max-height:280px;overflow:auto;background:#0a0e14;border:1px solid #1e2630;border-radius:8px;padding:8px;white-space:pre-wrap"></pre></div>
+      <div class="settings-option" style="align-items:center;gap:8px"><span>Save as skill</span>
+        <input id="opsSkillName" placeholder="e.g., update system" style="background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:6px;padding:6px;width:240px">
+        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="opsSkillRoot" checked> Root</label>
+        <button class="btn" id="opsSkillSave">Save</button>
+      </div>
+    </div>
+  </div></div>
 
   <div class="settings-modal" id="uploadModal"><div class="settings-content"><div class="settings-header"><h2>Upload file</h2><button class="settings-close" id="uploadClose">×</button></div><input type="file" id="uploadInput" /><div class="side-actions" style="margin-top:12px"><button class="btn primary" id="uploadDo">Upload</button></div><div id="uploadList" style="margin-top:12px;font-size:12px;color:#9aa0a6"></div></div></div>
 
@@ -938,6 +979,14 @@
           <span>Show timestamps</span>
           <input type="checkbox" id="showTimestamps" checked>
         </div>
+        <div class="settings-option">
+          <span>Auto transport defaults</span>
+          <input type="checkbox" id="autoTransport" checked>
+        </div>
+        <div class="settings-option">
+          <span>Enable chat root exec (!root ...)</span>
+          <input type="checkbox" id="chatRootExec">
+        </div>
       </div>
       
       <div class="side-actions" style="margin-top: 20px;">
@@ -962,6 +1011,78 @@
     <div class="side-actions" style="margin-top:10px;display:flex;gap:8px;">
       <button class="btn primary" id="botCreate">Create bot</button>
       <button class="btn ghost" id="botDelete">Delete selected</button>
+    </div>
+  </div></div>
+
+  <div id="ensembleModal" class="settings-modal"><div class="settings-content" style="max-width:760px">
+    <div class="settings-header"><h2>Ensemble settings</h2><button class="settings-close" id="ensembleClose">×</button></div>
+    <div class="settings-group">
+      <h3 class="settings-group-title">Mode</h3>
+      <div class="settings-option"><span>Mode</span>
+        <select id="ensembleMode" style="background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:6px;padding:6px;width:220px">
+          <option value="committee" selected>committee (multi-model + judge)</option>
+          <option value="router">router (choose one model)</option>
+          <option value="cascade">cascade (try models sequentially)</option>
+        </select>
+      </div>
+    </div>
+    <div class="settings-group">
+      <h3 class="settings-group-title">Models pool</h3>
+      <div class="settings-option" style="align-items:flex-start">
+        <span>Models (JSON or CSV)</span>
+        <textarea id="ensembleModels" rows="6" style="flex:1;background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:6px;padding:8px;width:100%" placeholder='[
+  {"provider":"openai","model":"gpt-4o-mini"},
+  {"provider":"anthropic","model":"claude-3-5-sonnet-latest"}
+]'></textarea>
+      </div>
+      <div class="settings-option">
+        <button class="btn" id="ensembleLoad">Load defaults</button>
+        <button class="btn primary" id="ensembleSave">Save</button>
+      </div>
+    </div>
+  </div></div>
+
+  <div id="skillsModal" class="settings-modal"><div class="settings-content" style="max-width:760px">
+    <div class="settings-header"><h2>Skills</h2><button class="settings-close" id="skillsClose">×</button></div>
+    <div class="settings-group">
+      <h3 class="settings-group-title">Create Skill</h3>
+      <div class="settings-option"><span>Name</span><input id="skillName" style="background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:6px;padding:6px;width:240px" placeholder="backup logs"></div>
+      <div class="settings-option"><span>Command</span><input id="skillCmd" style="background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:6px;padding:6px;width:420px" placeholder="tar czf /tmp/logs-{0}.tgz /var/log"></div>
+      <div class="settings-option"><span>Tags</span><input id="skillTags" style="background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:6px;padding:6px;width:300px" placeholder="ops,backup"></div>
+      <div class="settings-option"><span>Root?</span><input type="checkbox" id="skillRoot"></div>
+      <div class="settings-option"><button class="btn primary" id="skillCreate">Create</button></div>
+    </div>
+    <div class="settings-group">
+      <h3 class="settings-group-title">My Skills</h3>
+      <div class="settings-option"><span>Filter</span><input id="skillsFilter" placeholder="name or tag" style="background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:6px;padding:6px;width:240px"></div>
+      <div class="settings-option" style="align-items:flex-start"><span>List</span><div id="skillsList" style="flex:1;max-height:280px;overflow:auto"></div></div>
+    </div>
+    <div class="settings-group">
+      <h3 class="settings-group-title">Add Skill from JSON</h3>
+      <div class="settings-option" style="align-items:flex-start"><span>JSON</span><textarea id="skillJson" rows="6" style="flex:1;background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:6px;padding:8px;width:100%" placeholder='{"name":"sys_update","cmd":"dnf upgrade -y","is_root":true,"tags":["ops","system"]}'></textarea></div>
+      <div class="settings-option"><button class="btn" id="skillJsonAdd">Add</button></div>
+    </div>
+  </div></div>
+
+  <div id="ensPromptModal" class="settings-modal"><div class="settings-content" style="max-width:740px">
+    <div class="settings-header"><h2>Ensemble (this message)</h2><button class="settings-close" id="ensPromptClose">×</button></div>
+    <div class="settings-group">
+      <h3 class="settings-group-title">Override for next message</h3>
+      <div class="settings-option"><span>Mode</span>
+        <select id="ensOnceMode" style="background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:6px;padding:6px;width:220px">
+          <option value="committee" selected>committee</option>
+          <option value="router">router</option>
+          <option value="cascade">cascade</option>
+        </select>
+      </div>
+      <div class="settings-option" style="align-items:flex-start">
+        <span>Models (JSON or CSV)</span>
+        <textarea id="ensOnceModels" rows="5" style="flex:1;background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:6px;padding:8px;width:100%" placeholder='openai:gpt-4o-mini, anthropic:claude-3-5-sonnet-latest'></textarea>
+      </div>
+      <div class="settings-option">
+        <button class="btn primary" id="ensOnceApply">Apply for next message</button>
+        <button class="btn" id="ensOnceClear">Clear</button>
+      </div>
     </div>
   </div></div>
 
@@ -994,16 +1115,52 @@
     const scrollToBottomBtn = document.getElementById('scrollToBottom');
     const welcomeContainer = document.getElementById('welcomeContainer');
     const settingsBtn = document.getElementById('settingsBtn');
+    const dbHdr = document.getElementById('dbHdr');
+    const dbInitBtn = document.getElementById('dbInitBtn');
+    const dbModal = document.getElementById('dbModal');
+    const dbClose = document.getElementById('dbClose');
+    const dbStatus = document.getElementById('dbStatus');
+    const dbSQL = document.getElementById('dbSQL');
+    const dbCopy = document.getElementById('dbCopy');
+    const dbRefresh = document.getElementById('dbRefresh');
+    const dbOpen = document.getElementById('dbOpen');
     const settingsModal = document.getElementById('settingsModal');
     const settingsClose = document.getElementById('settingsClose');
     const saveSettingsBtn = document.getElementById('saveSettings');
     const resetSettingsBtn = document.getElementById('resetSettings');
 
-    // Bots UI elements
+    // Bots / Ensemble UI elements
     const botSelect = document.getElementById('botSelect');
     const botsBtn = document.getElementById('botsBtn');
     const botModal = document.getElementById('botModal');
     const botClose = document.getElementById('botClose');
+    const ensembleBtn = document.getElementById('ensembleBtn');
+    const skillsBtn = document.getElementById('skillsBtn');
+    const skillsModal = document.getElementById('skillsModal');
+    const skillsClose = document.getElementById('skillsClose');
+    const skillName = document.getElementById('skillName');
+    const skillCmd = document.getElementById('skillCmd');
+    const skillRoot = document.getElementById('skillRoot');
+    const skillTags = document.getElementById('skillTags');
+    const skillCreate = document.getElementById('skillCreate');
+    const skillsList = document.getElementById('skillsList');
+    const skillsFilter = document.getElementById('skillsFilter');
+    const skillJson = document.getElementById('skillJson');
+    const skillJsonAdd = document.getElementById('skillJsonAdd');
+    const ensembleModal = document.getElementById('ensembleModal');
+    const ensembleClose = document.getElementById('ensembleClose');
+    const ensembleModeSel = document.getElementById('ensembleMode');
+    const ensembleModelsTA = document.getElementById('ensembleModels');
+    const ensembleLoadBtn = document.getElementById('ensembleLoad');
+    const ensembleSaveBtn = document.getElementById('ensembleSave');
+
+    const ensPromptBtn = document.getElementById('ensPromptBtn');
+    const ensPromptModal = document.getElementById('ensPromptModal');
+    const ensPromptClose = document.getElementById('ensPromptClose');
+    const ensOnceMode = document.getElementById('ensOnceMode');
+    const ensOnceModels = document.getElementById('ensOnceModels');
+    const ensOnceApply = document.getElementById('ensOnceApply');
+    const ensOnceClear = document.getElementById('ensOnceClear');
 
     const WS_URL = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws';
     let ws, connected = false, abortStream = false, currentSessionId = null, currentReqId = null;
@@ -1058,6 +1215,9 @@
       m.appendChild(copy); 
       m.appendChild(meta);
       board.appendChild(m);
+      
+      // Enhance with 'Run as root' buttons for code blocks and parse RUN_ directives
+      try { attachOpsButtons(m); attachRunDirectives(m, text); } catch (e) {}
       
       // Scroll to bottom if auto-scroll is enabled
       if (isAtBottom) {
@@ -1225,6 +1385,9 @@
       
       m.__streamTextNode.textContent += delta;
       
+      // As soon as we have a code fence in streamed content, attach run buttons
+      try { attachOpsButtons(m); } catch (e) {}
+      
       // Scroll to bottom if auto-scroll is enabled
       if (isAtBottom) {
         board.scrollTo({ top: board.scrollHeight, behavior: 'smooth' });
@@ -1390,6 +1553,8 @@
       if (settings.autoScroll !== undefined) document.getElementById('autoScroll').checked = settings.autoScroll;
       if (settings.sendWithEnter !== undefined) document.getElementById('sendWithEnter').checked = settings.sendWithEnter;
       if (settings.showTimestamps !== undefined) document.getElementById('showTimestamps').checked = settings.showTimestamps;
+      if (settings.autoTransport !== undefined) document.getElementById('autoTransport').checked = settings.autoTransport;
+      if (settings.chatRootExec !== undefined) document.getElementById('chatRootExec').checked = settings.chatRootExec;
       
       // Apply visual settings
       applyVisualSettings();
@@ -1404,7 +1569,9 @@
         fontSize: document.getElementById('fontSize').value,
         autoScroll: document.getElementById('autoScroll').checked,
         sendWithEnter: document.getElementById('sendWithEnter').checked,
-        showTimestamps: document.getElementById('showTimestamps').checked
+        showTimestamps: document.getElementById('showTimestamps').checked,
+        autoTransport: document.getElementById('autoTransport').checked,
+        chatRootExec: document.getElementById('chatRootExec').checked
       };
       
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
@@ -1458,13 +1625,30 @@
         const h = await r.json();
         const providers = h.available_providers || ['openai'];
         
-        providerSel.innerHTML = providers.map(p => `<option value="${p}">${p}</option>`).join('');
+        providerSel.innerHTML = providers.map(p => `<option value=\"${p}\">${p}</option>`).join('');
         providerSel.value = settings.provider || h.provider || providers[0];
         providerActive.textContent = providerSel.value;
+        // DB header from stores
+        try{
+          const stores = h.stores||{}; const using = (stores.bots||'json');
+          if (dbHdr) { dbHdr.textContent = `DB: ${using}`; dbHdr.title = JSON.stringify(stores); }
+        }catch(e){}
 
-        const models = h.available_models || ['gpt-5','gpt-5-mini','gpt-4o-mini'];
-        modelSel.innerHTML = models.map(m => `<option value="${m}">${m}</option>`).join('');
-        modelSel.value = settings.model || h.model || models[0];
+        // Build merged list of models across providers for convenience
+        const byProv = h.models_by_provider || {};
+        let merged = [];
+        try {
+          merged = Array.from(new Set(Object.values(byProv).flat()));
+        } catch(e) {
+          merged = h.available_models || ['gpt-5','gpt-5-mini','gpt-4o-mini'];
+        }
+        if (!Array.isArray(merged) || merged.length === 0) {
+          merged = ['gpt-5','gpt-5-mini','gpt-4o-mini'];
+        }
+        // Expose special aggregator option
+        const modelsWithEnsemble = [...merged, 'ensemble'];
+        modelSel.innerHTML = modelsWithEnsemble.map(m => `<option value=\"${m}\">${m}</option>`).join('');
+        modelSel.value = settings.model || h.model || modelsWithEnsemble[0];
         modelActive.textContent = modelSel.value;
 
         temp.value = settings.temperature || h.temperature || 0.2; 
@@ -1485,7 +1669,33 @@
       }
     }
 
-    initHealth();
+    initHealth().then(()=>{ try{ adjustTransportDefaults(); }catch(e){} });
+
+    // DB modal wiring
+    let lastDbStatus = null;
+    async function refreshDb(){
+      try{
+        const r = await fetch('/supabase/status'); const j = await r.json(); lastDbStatus = j;
+        if (dbStatus) dbStatus.textContent = JSON.stringify(j, null, 2);
+        if (dbSQL && j.sql) dbSQL.value = j.sql;
+      }catch(e){ if (dbStatus) dbStatus.textContent = 'status error'; }
+    }
+    dbInitBtn?.addEventListener('click', ()=>{ refreshDb(); dbModal?.classList.add('open'); });
+    dbHdr?.addEventListener('click', ()=>{ refreshDb(); dbModal?.classList.add('open'); });
+    dbClose?.addEventListener('click', ()=> dbModal?.classList.remove('open'));
+    dbCopy?.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(dbSQL?.value||''); toast('Copied SQL','success'); }catch(e){ toast('Copy failed','error'); } });
+    dbRefresh?.addEventListener('click', refreshDb);
+    dbOpen?.addEventListener('click', ()=>{
+      try{
+        const url = (lastDbStatus && lastDbStatus.url) || '';
+        if (!url){ toast('No SUPABASE_URL configured','error'); return; }
+        const a = document.createElement('a');
+        // SUPABASE_URL looks like https://<projectRef>.supabase.co
+        const host = new URL(url).hostname; const ref = host.split('.')[0];
+        const dash = `https://app.supabase.com/project/${ref}/sql`;
+        a.href = dash; a.target = '_blank'; a.rel = 'noopener'; a.click();
+      }catch(e){ toast('Open failed','error'); }
+    });
 
     // ---- Bots API ----
     async function apiOrigin(){
@@ -1494,6 +1704,30 @@
     async function listBots(){ const r = await fetch((await apiOrigin())+"/bots",{cache:"no-store"}); const j = await r.json(); return j.bots||[]; }
     async function createBot(payload){ const r = await fetch((await apiOrigin())+"/bots",{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); if(!r.ok) throw new Error('create failed'); return (await r.json()).bot; }
     async function deleteBot(id){ const r = await fetch((await apiOrigin())+"/bots/"+id,{method:"DELETE"}); if(!r.ok) throw new Error('delete failed'); return true; }
+
+    // ---- Extensions API ----
+    async function extInstall(name, content){
+      const tok = (localStorage.getItem('qc.ops_token')||'').trim();
+      if (!tok) { toast('Set OPS_TOKEN in Root Ops first','warning'); throw new Error('No OPS_TOKEN'); }
+      const r = await fetch('/extensions/install',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','X-OPS-TOKEN': tok},
+        body: JSON.stringify({ name, content })
+      });
+      if(!r.ok){ const t = await r.text(); throw new Error('install failed: '+t); }
+      return await r.json();
+    }
+    async function extCall(moduleName, funcName, args){
+      const body = { module: moduleName, func: funcName, args: Array.isArray(args)? args : [] };
+      const r = await fetch('/extensions/call',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
+      if(!r.ok){ const t = await r.text(); throw new Error('call failed: '+t); }
+      return await r.json();
+    }
+
     async function refreshBotSelect(){
       try{
         const bots = await listBots();
@@ -1510,34 +1744,365 @@
     botClose?.addEventListener('click', ()=> botModal?.classList.remove('open'));
     document.getElementById('botCreate')?.addEventListener('click', async ()=>{
       const payload = {
-        name: (document.getElementById('botName') as any)?.value || 'New Bot',
-        emoji: (document.getElementById('botEmoji') as any)?.value || '🤖',
-        provider: (document.getElementById('botProvider') as any)?.value || 'openai',
-        model: (document.getElementById('botModel') as any)?.value || 'gpt-5',
-        temperature: parseFloat(((document.getElementById('botTemp') as any)?.value || '0.2')),
-        max_tokens: parseInt(((document.getElementById('botMaxToks') as any)?.value || '800')),
-        system_prompt: (document.getElementById('botPrompt') as any)?.value || 'You are a specialized assistant.'
+        name: (document.getElementById('botName')?.value) || 'New Bot',
+        emoji: (document.getElementById('botEmoji')?.value) || '🤖',
+        provider: (document.getElementById('botProvider')?.value) || 'openai',
+        model: (document.getElementById('botModel')?.value) || 'gpt-5',
+        temperature: parseFloat(((document.getElementById('botTemp')?.value) || '0.2')),
+        max_tokens: parseInt(((document.getElementById('botMaxToks')?.value) || '800')),
+        system_prompt: (document.getElementById('botPrompt')?.value) || 'You are a specialized assistant.'
       };
       try{ await createBot(payload); toast('Bot created','success'); await refreshBotSelect(); }catch(e){ toast('Create failed','error'); }
     });
     document.getElementById('botDelete')?.addEventListener('click', async ()=>{
       const id = botSelect?.value; if(!id){ toast('Select a bot first','warning'); return; }
       if(!confirm('Delete selected bot?')) return;
-      try{ await deleteBot(id as string); toast('Bot deleted','success'); await refreshBotSelect(); }catch(e){ toast('Delete failed','error'); }
+      try{ await deleteBot(String(id)); toast('Bot deleted','success'); await refreshBotSelect(); }catch(e){ toast('Delete failed','error'); }
     });
     window.addEventListener('load', refreshBotSelect);
 
+    // Skills wiring
+    async function fetchSkills(){ const r = await fetch('/skills'); const j = await r.json(); return j.skills||[]; }
+    async function renderSkills(){
+      try{
+        let rows = await fetchSkills();
+        const el = skillsList; if (!el) return;
+        const q = (skillsFilter?.value||'').toLowerCase().trim();
+        if (q){ rows = rows.filter(s=> (s.name||'').toLowerCase().includes(q) || (Array.isArray(s.tags)? s.tags.join(',').toLowerCase().includes(q): false)); }
+        el.innerHTML = '';
+        rows.forEach(s => {
+          const row = document.createElement('div'); row.style.display='flex'; row.style.gap='8px'; row.style.alignItems='center'; row.style.margin='4px 0';
+          const span = document.createElement('span'); span.textContent = `${s.name}  ${s.is_root ? '(root)' : ''}  ${Array.isArray(s.tags)&&s.tags.length? '['+s.tags.join(', ')+']':''}`; span.style.flex='1';
+          const run = document.createElement('button'); run.className='btn btn-sm'; run.textContent='Run';
+          const del = document.createElement('button'); del.className='btn btn-sm'; del.textContent='Delete';
+          run.addEventListener('click', async()=>{
+            const args = prompt('Args (space separated)? e.g., 2025-09-01') || '';
+            const tok = (localStorage.getItem('qc.ops_token')||'');
+            const body = { name: s.name, args: (args? args.split(/\s+/):[]) };
+            try{
+              const r = await fetch('/skills/run', { method:'POST', headers:{'Content-Type':'application/json','X-OPS-TOKEN': tok}, body: JSON.stringify(body) });
+              if (r.status === 412){ if (!confirm('Skill requires confirmation; proceed?')) return; body.confirm = true; const r2 = await fetch('/skills/run', { method:'POST', headers:{'Content-Type':'application/json','X-OPS-TOKEN': tok}, body: JSON.stringify(body) }); const j2 = await r2.json(); alert((j2.stdout||'') + (j2.stderr? ('\n'+j2.stderr):'')); return; }
+              const j = await r.json(); alert((j.stdout||'') + (j.stderr? ('\n'+j.stderr):''));
+            }catch(e){ alert('Run failed: '+e); }
+          });
+          del.addEventListener('click', async()=>{ if(!confirm('Delete skill?')) return; try{ await fetch('/skills/'+s.id,{method:'DELETE'}); renderSkills(); }catch(e){ alert('Delete failed'); } });
+          row.appendChild(span); row.appendChild(run); row.appendChild(del); el.appendChild(row);
+        });
+      }catch(e){ console.error(e); }
+    }
+    skillsBtn?.addEventListener('click', ()=>{ renderSkills(); skillsModal?.classList.add('open'); });
+    skillsFilter?.addEventListener('input', ()=> renderSkills());
+    skillsClose?.addEventListener('click', ()=> skillsModal?.classList.remove('open'));
+    skillCreate?.addEventListener('click', async()=>{
+      const name=(skillName?.value||'').trim(); const cmd=(skillCmd?.value||'').trim(); const is_root=!!(skillRoot?.checked); const tags=(skillTags?.value||'').split(',').map(x=>x.trim()).filter(Boolean);
+      if(!name||!cmd){ toast('Enter name and command','error'); return; }
+      try{ await fetch('/skills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,cmd,is_root,tags})}); toast('Skill created','success'); renderSkills(); }
+      catch(e){ toast('Create failed','error'); }
+    });
+
+    skillJsonAdd?.addEventListener('click', async()=>{
+      try{
+        const v = JSON.parse(skillJson?.value||'{}');
+        if (!v || !v.name || !v.cmd){ toast('Invalid JSON','error'); return; }
+        await fetch('/skills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(v)});
+        toast('Skill added','success'); renderSkills();
+      }catch(e){ toast('Add failed','error'); }
+    });
+
+    // Ensemble UI wiring
+    function loadEnsembleFromSettings(){ try{
+      if (settings.ensembleMode) ensembleModeSel.value = settings.ensembleMode;
+      if (settings.ensembleModels) ensembleModelsTA.value = settings.ensembleModels; }catch(e){}
+    }
+    ensembleBtn?.addEventListener('click', ()=>{ loadEnsembleFromSettings(); ensembleModal?.classList.add('open'); });
+    ensembleClose?.addEventListener('click', ()=> ensembleModal?.classList.remove('open'));
+    ensembleLoadBtn?.addEventListener('click', async ()=>{
+      try{ const r = await fetch('/ensemble/models'); const j = await r.json(); const def = j.models||[]; ensembleModelsTA.value = JSON.stringify(def, null, 2); toast('Defaults loaded','success'); }
+      catch(e){ toast('Load failed','error'); }
+    });
+    ensembleSaveBtn?.addEventListener('click', ()=>{
+      settings.ensembleMode = ensembleModeSel?.value || 'committee';
+      settings.ensembleModels = ensembleModelsTA?.value || '';
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      ensembleModal?.classList.remove('open');
+      toast('Ensemble settings saved','success');
+    });
+
+    // Per-message overrides (gear)
+    let ensOverride = null;
+    // Load persisted one if present
+    try{ if (settings && settings.ensOverride) ensOverride = settings.ensOverride; }catch(e){}
+    function syncEnsPromptDefaults(){ try{ 
+      // prefer override values if present
+      if (ensOverride && (ensOverride.mode || ensOverride.models)){
+        ensOnceMode.value = ensOverride.mode || (settings.ensembleMode || 'committee');
+        ensOnceModels.value = ensOverride.models || (settings.ensembleModels || '');
+      } else {
+        ensOnceMode.value = settings.ensembleMode || 'committee'; 
+        ensOnceModels.value = settings.ensembleModels || ''; 
+      }
+    }catch(e){} }
+    ensPromptBtn?.addEventListener('click', ()=>{ syncEnsPromptDefaults(); ensPromptModal?.classList.add('open'); });
+    ensPromptClose?.addEventListener('click', ()=> ensPromptModal?.classList.remove('open'));
+    ensOnceApply?.addEventListener('click', ()=>{ 
+      ensOverride = { mode: (ensOnceMode?.value||'committee'), models: (ensOnceModels?.value||'') };
+      // persist across messages until cleared
+      settings.ensOverride = ensOverride;
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      ensPromptModal?.classList.remove('open'); 
+      try{ adjustTransportDefaults(); }catch(e){}
+      toast('Override active (persists until cleared)','success'); 
+    });
+    ensOnceClear?.addEventListener('click', ()=>{ 
+      ensOverride = null; 
+      try{ delete settings.ensOverride; }catch(e){}
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      ensPromptModal?.classList.remove('open'); 
+      try{ adjustTransportDefaults(); }catch(e){}
+      toast('Override cleared','success'); 
+    });
+
+    // Helpers for override badge
+    function getEnsOverride(){ try{ return ensOverride || (settings && settings.ensOverride) || null; }catch(e){ return ensOverride; } }
+
+    // Open Root Ops modal and pre-fill command
+    function openOpsWith(cmd){
+      try{
+        if (opsCmd) opsCmd.value = (cmd||'').trim();
+        if (opsModal) opsModal.classList.add('open');
+        try{ const saved = localStorage.getItem('qc.ops_token'); if (saved && opsTokenEl && !opsTokenEl.value) opsTokenEl.value = saved; }catch(e){}
+        if (opsCmd) opsCmd.focus();
+      }catch(e){}
+    }
+
+    function stripPrompts(txt){ try{ return (txt||'').split('\n').map(l => l.replace(/^\s*[$#]\s+/, '')).join('\n').trim(); }catch(e){ return txt||''; } }
+    function currentSelectionText(){
+      try{
+        const sel = (window.getSelection && window.getSelection().toString()) || '';
+        if (sel && sel.trim()) return sel.trim();
+        const ae = document.activeElement;
+        if (ae && typeof ae.value === 'string') {
+          const start = ae.selectionStart||0, end = ae.selectionEnd||0;
+          if (end>start) return ae.value.substring(start,end).trim();
+        }
+      }catch(e){}
+      return '';
+    }
+
+    // Parse plain text directives emitted by the assistant and render action buttons.
+    // Supported:
+    //  - RUN_ROOT: <cmd>
+    //  - RUN_USER: <cmd>
+    //  - EXT_INSTALL: <name>.py   (uses /extensions/install; code is taken from the first code block in this message)
+    //  - EXT_CALL: <module>:<func> [args=<JSON array>]
+    function attachRunDirectives(msgEl, rawText){
+      try{
+        if (!rawText || typeof rawText !== 'string') return;
+
+        // ---- RUN_* directives ----
+        const runMatches = Array.from(rawText.matchAll(/^RUN_(ROOT|USER):\s*(.+)$/gim));
+        if (runMatches.length) {
+          const row = document.createElement('div'); row.style.display='flex'; row.style.gap='8px'; row.style.margin='6px 0';
+          runMatches.forEach(m=>{
+            const kind = (m[1]||'').toUpperCase(); const cmd = (m[2]||'').trim();
+            const btn = document.createElement('button'); btn.className='btn btn-sm';
+            btn.textContent = kind==='ROOT' ? `Run as root: ${cmd.slice(0,28)}` : `Run (user): ${cmd.slice(0,28)}`;
+            btn.addEventListener('click', ()=>{ if(kind==='ROOT') openOpsWith(cmd); else window.open('/user-terminal?cmd='+encodeURIComponent(cmd),'_blank'); });
+            row.appendChild(btn);
+          });
+          msgEl.appendChild(row);
+        }
+
+        // ---- EXT_INSTALL / EXT_CALL directives ----
+        // Extract first code block content for install payload
+        const codeEl = msgEl.querySelector('pre code');
+        const codeText = codeEl ? (codeEl.textContent || '') : '';
+
+        // EXT_INSTALL: <name>.py
+        const installMatches = Array.from(rawText.matchAll(/^EXT_INSTALL:\s*(.+)$/gim));
+        // EXT_CALL: module:function [args=JSON]
+        const callMatches = Array.from(rawText.matchAll(/^EXT_CALL:\s*(.+)$/gim));
+        if (installMatches.length || callMatches.length) {
+          const row2 = document.createElement('div'); row2.style.display='flex'; row2.style.gap='8px'; row2.style.margin='6px 0';
+
+          installMatches.forEach(m=>{
+            const nameRaw = (m[1]||'').trim();
+            const name = nameRaw.replace(/^\s+|\s+$/g,'');
+            const btnI = document.createElement('button'); btnI.className='btn btn-sm';
+            btnI.textContent = `Install: ${name.slice(0,28)}`;
+            btnI.addEventListener('click', async()=>{
+              try{
+                if (!codeText){ toast('No code block found in message','error'); return; }
+                await extInstall(name, codeText);
+                toast(`Installed ${name}`,'success');
+              }catch(e){ toast('Install failed: '+e.message,'error'); }
+            });
+            row2.appendChild(btnI);
+          });
+
+          callMatches.forEach(m=>{
+            const spec = (m[1]||'').trim();
+            let mod = '', fn = 'main', args = [];
+            try{
+              // Try formats: "module:function [args=JSON]" or "module:function" or "module=.. func=.. args=.."
+              const kv = Object.fromEntries(Array.from(spec.matchAll(/(module|mod|m|func|fn|f|args)\s*=\s*([^\s]+|\[[\s\S]*\]|\{[\s\S]*\})/gi)).map(x=>[x[1].toLowerCase(), x[2]]));
+              if (Object.keys(kv).length){
+                mod = (kv.module||kv.mod||kv.m||'').replace(/^extensions\./,'');
+                fn = (kv.func||kv.fn||kv.f||'main');
+                if (kv.args){ try{ args = JSON.parse(kv.args); }catch(_){} }
+              } else if (spec.includes(':')) {
+                const parts = spec.split(':'); mod = parts[0].trim().replace(/^extensions\./,'');
+                const rest = parts.slice(1).join(':').trim();
+                const m2 = rest.match(/^(\w+)(?:.*?args\s*=\s*(\[[\s\S]*\]|\{[\s\S]*\}))?/i);
+                if (m2){ fn = m2[1]; if (m2[2]){ try{ args = JSON.parse(m2[2]); }catch(_){} } }
+              } else {
+                mod = spec.trim().replace(/^extensions\./,'');
+              }
+            }catch(_){ /* ignore parse errors */ }
+            const btnC = document.createElement('button'); btnC.className='btn btn-sm';
+            btnC.textContent = `Call: ${mod||'?'}:${fn}`;
+            btnC.addEventListener('click', async()=>{
+              try{
+                if (!mod){ toast('EXT_CALL missing module','error'); return; }
+                const res = await extCall(mod, fn, args);
+                toast('Call ok','success');
+                try{ if (res && typeof res.result !== 'undefined'){ console.log('[extensions.call]', res.result); } }catch(e){}
+              }catch(e){ toast('Call failed: '+e.message,'error'); }
+            });
+            row2.appendChild(btnC);
+
+            // If we also have an install name in this message, offer Install+Call
+            const installName = installMatches.length ? (installMatches[0][1]||'').trim() : '';
+            if (installName){
+              const btnIC = document.createElement('button'); btnIC.className='btn btn-sm';
+              btnIC.textContent = `Install+Call`;
+              btnIC.addEventListener('click', async()=>{
+                try{
+                  if (!codeText){ toast('No code block found in message','error'); return; }
+                  await extInstall(installName, codeText);
+                  const mname = (mod||installName.replace(/\.py$/,''));
+                  const res = await extCall(mname, fn, args);
+                  toast('Installed and called','success');
+                  try{ if (res && typeof res.result !== 'undefined'){ console.log('[extensions.call]', res.result); } }catch(e){}
+                }catch(e){ toast('Install+Call failed: '+e.message,'error'); }
+              });
+              row2.appendChild(btnIC);
+            }
+          });
+
+          if (row2.childElementCount>0) msgEl.appendChild(row2);
+        }
+      }catch(e){}
+    }
+
+    // Global shortcut: Ctrl+Shift+R opens Root Ops with selected text or input content
+    document.addEventListener('keydown', (e)=>{
+      try{
+        if (e.ctrlKey && e.shiftKey && (e.key==='R' || e.key==='r' || e.code==='KeyR')){
+          e.preventDefault();
+          let txt = currentSelectionText();
+          if (!txt && input && input.value) txt = input.value;
+          txt = stripPrompts(txt||'');
+          openOpsWith(txt);
+        }
+      }catch(err){}
+    });
+
+    // Attach 'Run as root' buttons to code blocks within a message element
+    function attachOpsButtons(msgEl){
+      try{
+        const preBlocks = msgEl.querySelectorAll('pre');
+        preBlocks.forEach(pre => {
+          if (pre.__qcOpsButtonAttached) return;
+          pre.__qcOpsButtonAttached = true;
+          const row = document.createElement('div');
+          row.style.display='flex'; row.style.gap='8px'; row.style.marginTop='6px';
+          const btn = document.createElement('button');
+          btn.className = 'btn btn-sm';
+          btn.textContent = 'Run as root';
+          const btnUser = document.createElement('button');
+          btnUser.className = 'btn btn-sm';
+          btnUser.textContent = 'Run (user)';
+          const btnCopy = document.createElement('button');
+          btnCopy.className = 'btn btn-sm';
+          btnCopy.textContent = 'Copy';
+          function extract(){
+            const codeEl = pre.querySelector('code');
+            let txt = (codeEl ? codeEl.textContent : pre.textContent) || '';
+            return txt.split('\n').map(l => l.replace(/^\s*[$#]\s+/, '')).join('\n').trim();
+          }
+          btn.addEventListener('click', () => { openOpsWith(extract()); });
+          btnUser.addEventListener('click', () => { const txt=extract(); window.open('/user-terminal?cmd='+encodeURIComponent(txt),'_blank'); });
+          btnCopy.addEventListener('click', async () => { try{ await navigator.clipboard.writeText(extract()); toast('Copied','success'); }catch(e){ toast('Copy failed','error'); } });
+          row.appendChild(btn); row.appendChild(btnUser); row.appendChild(btnCopy);
+          pre.parentNode.insertBefore(row, pre.nextSibling);
+        });
+      }catch(e){}
+    }
+    function overrideSummary(){
+      try{
+        const ov = getEnsOverride();
+        if (!ov) return '';
+        const mode = ov.mode || settings.ensembleMode || 'committee';
+        let models = ov.models || settings.ensembleModels || '';
+        let csv = '';
+        try {
+          const parsed = JSON.parse(models);
+          if (Array.isArray(parsed)) {
+            csv = parsed.map(m => `${(m.provider||'')}:${(m.model||'')}`).join(', ');
+          }
+        } catch(e) {
+          // not JSON, assume CSV already
+          csv = String(models||'');
+        }
+        csv = csv.trim();
+        const maxLen = 220;
+        if (csv.length > maxLen) csv = csv.slice(0, maxLen) + '…';
+        return `mode: ${mode}\npool: ${csv}`;
+      }catch(e){ return ''; }
+    }
+
     // Update settings when options change
+    // Smart transport defaults based on provider/model
+    function adjustTransportDefaults(){
+      try{
+        if (settings && settings.autoTransport === false) return; // user disabled
+        const prov = (providerSel?.value||'').toLowerCase();
+        const model = (modelSel?.value||'').toLowerCase();
+        const isEnsemble = model === 'ensemble';
+        // Toggle header badges and per-message gear
+        const hdr = document.getElementById('ensembleHdr');
+        if (hdr) hdr.style.display = isEnsemble ? '' : 'none';
+        const ovHdr = document.getElementById('ensOverrideHdr');
+        const hasOv = !!( (ensOverride && (ensOverride.mode || ensOverride.models)) || (settings && settings.ensOverride) );
+        if (ovHdr) {
+          ovHdr.style.display = (isEnsemble && hasOv) ? '' : 'none';
+          ovHdr.title = hasOv ? overrideSummary() : '';
+        }
+        if (ensPromptBtn) ensPromptBtn.style.display = isEnsemble ? '' : 'none';
+        // For gpt-5 (OpenAI) or special 'ensemble', default to non-stream over WS for reliability
+        if ((prov === 'openai' && model.startsWith('gpt-5')) || isEnsemble) {
+          if (transportSel) transportSel.value = 'ws';
+          if (streamChk) streamChk.checked = false;
+        } else {
+          if (transportSel) transportSel.value = 'ws';
+          if (streamChk) streamChk.checked = true;
+        }
+      }catch(e){ /* ignore */ }
+    }
+
     providerSel.addEventListener('change', () => {
       providerActive.textContent = providerSel.value;
       settings.provider = providerSel.value;
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      adjustTransportDefaults();
     });
     
     modelSel.addEventListener('change', () => {
       modelActive.textContent = modelSel.value;
       settings.model = modelSel.value;
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      adjustTransportDefaults();
     });
     
     temp.addEventListener('input', () => {
@@ -1624,20 +2189,6 @@
           reconnectTimeout = setTimeout(() => {
             reconnectAttempts++;
 connect();
-
-// load file list helper
-async function refreshFiles(){ try{ const r=await fetch('/files'); const j=await r.json(); uploadList.textContent = (j.files||[]).map(f=>`${f.name} (${Math.round((f.size||0)/1024)} KB)`).join('\n'); }catch(e){} }
-uploadBtn?.addEventListener('click', ()=>{ uploadModal.classList.add('open'); refreshFiles(); });
-uploadClose?.addEventListener('click', ()=> uploadModal.classList.remove('open'));
-uploadDo?.addEventListener('click', async ()=>{ const f=uploadInput.files&&uploadInput.files[0]; if(!f){ toast('Pick a file','warning'); return; } const fd=new FormData(); fd.append('file', f); const r=await fetch('/files/upload', {method:'POST', body: fd}); if(!r.ok){ toast('Upload failed','error'); return; } toast('Uploaded','success'); refreshFiles(); });
-
-// empire chips map to default bots (if exist)
-async function pickBotByName(name){ try{ const r=await fetch('/bots'); const j=await r.json(); const b=(j.bots||[]).find(x=>x.name.toLowerCase().includes(name)); if(b){ document.getElementById('botSelect').value=b.id; toast(`${b.emoji||'🤖'} ${b.name} selected`,'success'); } }catch(e){} }
-chipFinance?.addEventListener('click', ()=> pickBotByName('finance'));
-chipFund?.addEventListener('click', ()=> pickBotByName('fundraiser'));
-chipLegal?.addEventListener('click', ()=> pickBotByName('legal'));
-chipContent?.addEventListener('click', ()=> pickBotByName('content'));
-chipOps?.addEventListener('click', ()=> pickBotByName('ops'));
           }, delay);
         }
       });
@@ -1672,7 +2223,133 @@ const chipFinance = document.getElementById('chipFinance');
 const chipFund = document.getElementById('chipFund');
 const chipLegal = document.getElementById('chipLegal');
 const chipContent = document.getElementById('chipContent');
-const chipOps = document.getElementById('chipOps');
+    const chipOps = document.getElementById('chipOps');
+    const opsBtnHead = document.getElementById('opsBtnHead');
+    const opsModal = document.getElementById('opsModal');
+    const opsClose = document.getElementById('opsClose');
+    const opsTokenEl = document.getElementById('opsToken');
+    const opsSaveBtn = document.getElementById('opsSave');
+    const opsTestBtn = document.getElementById('opsTest');
+    const opsStatus = document.getElementById('opsStatus');
+    const opsCmd = document.getElementById('opsCmd');
+    const opsRunBtn = document.getElementById('opsRun');
+    const opsConfirm = document.getElementById('opsConfirm');
+    const opsOut = document.getElementById('opsOut');
+    const opsOpenTerm = document.getElementById('opsOpenTerm');
+    const opsSkillName = document.getElementById('opsSkillName');
+    const opsSkillRoot = document.getElementById('opsSkillRoot');
+    const opsSkillSave = document.getElementById('opsSkillSave');
+
+// ---------- File uploads (moved out of reconnect timer) ----------
+async function refreshFiles(){
+  try{
+    const r = await fetch('/files', { cache: 'no-store' });
+    const j = await r.json();
+    if (uploadList) {
+      uploadList.textContent = (j.files||[])
+        .map(f => `${f.name} (${Math.round((f.size||0)/1024)} KB)`).join('\n');
+    }
+  }catch(e){ console.error('refreshFiles failed', e); }
+}
+
+uploadBtn?.addEventListener('click', () => { uploadModal?.classList.add('open'); refreshFiles(); });
+uploadClose?.addEventListener('click', () => uploadModal?.classList.remove('open'));
+uploadDo?.addEventListener('click', async () => {
+  const f = uploadInput?.files && uploadInput.files[0];
+  if (!f) { toast('Pick a file','warning'); return; }
+  const fd = new FormData();
+  fd.append('file', f);
+  try{
+    const r = await fetch('/files/upload', { method: 'POST', body: fd });
+    if (!r.ok) { toast('Upload failed','error'); return; }
+    toast('Uploaded','success');
+    refreshFiles();
+  }catch(e){ toast('Upload failed','error'); }
+});
+
+// ---------- Quick-pick bot chips ----------
+async function pickBotByName(name){
+  try{
+    const r = await fetch('/bots');
+    const j = await r.json();
+    const b = (j.bots||[]).find(x => (x.name||'').toLowerCase().includes(name));
+    if (b) {
+      const sel = document.getElementById('botSelect');
+      if (sel) sel.value = b.id;
+      toast(`${b.emoji||'🤖'} ${b.name} selected`,'success');
+    }
+  }catch(e){ console.error(e); }
+}
+chipFinance?.addEventListener('click', ()=> pickBotByName('finance'));
+chipFund?.addEventListener('click', ()=> pickBotByName('fundraiser'));
+chipLegal?.addEventListener('click', ()=> pickBotByName('legal'));
+chipContent?.addEventListener('click', ()=> pickBotByName('content'));
+chipOps?.addEventListener('click', ()=> pickBotByName('ops'));
+// Open Ops modal
+opsBtnHead?.addEventListener('click', ()=>{
+  try{ const saved = localStorage.getItem('qc.ops_token'); if (saved && opsTokenEl) opsTokenEl.value = saved; }catch(e){}
+  opsModal?.classList.add('open');
+});
+opsClose?.addEventListener('click', ()=> opsModal?.classList.remove('open'));
+opsSaveBtn?.addEventListener('click', ()=>{
+  const tok = (opsTokenEl?.value||'').trim();
+  if (!tok){ toast('Token required','error'); return; }
+  try{ localStorage.setItem('qc.ops_token', tok); toast('Token saved','success'); }catch(e){ toast('Failed to save','error'); }
+});
+opsTestBtn?.addEventListener('click', async()=>{
+  const tok = (opsTokenEl?.value||'').trim();
+  opsStatus.textContent = 'testing…';
+  try{
+    const r = await fetch('/ops/health',{headers:{'X-OPS-TOKEN': tok||''}});
+    if(r.ok){ opsStatus.textContent = 'ok'; toast('Ops OK','success'); }
+    else { opsStatus.textContent = 'unauthorized'; toast('Unauthorized','error'); }
+  }catch(e){ opsStatus.textContent = 'error'; toast('Test failed','error'); }
+});
+opsRunBtn?.addEventListener('click', async()=>{
+  const tok = (opsTokenEl?.value||'').trim();
+  const cmd = (opsCmd?.value||'').trim();
+  if (!tok){ toast('Token required','error'); return; }
+  if (!cmd){ toast('Enter a command','error'); return; }
+  opsOut.textContent = 'running…';
+  try{
+    const r = await fetch('/ops/shell', { method:'POST', headers:{'Content-Type':'application/json','X-OPS-TOKEN': tok}, body: JSON.stringify({cmd, confirm: !!opsConfirm?.checked}) });
+    if (r.status === 412){ const j = await r.json(); opsOut.textContent = 'Confirmation required: ' + (j?.detail?.preview||''); toast('Confirm destructive','warning'); return; }
+    const j = await r.json();
+    opsOut.textContent = JSON.stringify(j, null, 2);
+    // suggest a skill name based on cmd
+    try{
+      const suggested = suggestSkillName(cmd);
+      if (opsSkillName && !opsSkillName.value) opsSkillName.value = suggested;
+      if (opsSkillRoot) opsSkillRoot.checked = true;
+    }catch(e){}
+  }catch(e){ opsOut.textContent = String(e); }
+});
+
+function suggestSkillName(cmd){
+  try{
+    const words = cmd.trim().split(/\s+/);
+    if (!words.length) return 'custom skill';
+    const tool = words[0];
+    const rest = words.slice(1).filter(w=>!w.startsWith('-') && !w.startsWith('--') && !w.startsWith('/')).slice(0,3).join(' ');
+    let name = tool + (rest? (' ' + rest) : '');
+    name = name.replace(/\s+/g,' ').slice(0,48);
+    return name;
+  }catch(e){ return 'custom skill'; }
+}
+
+opsSkillSave?.addEventListener('click', async()=>{
+  const name=(opsSkillName?.value||'').trim();
+  const cmd=(opsCmd?.value||'').trim();
+  const is_root=!!(opsSkillRoot?.checked);
+  if(!name||!cmd){ toast('Enter name and command','error'); return; }
+  try{ await fetch('/skills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,cmd,is_root})}); toast('Skill saved','success'); }
+  catch(e){ toast('Save failed','error'); }
+});
+opsOpenTerm?.addEventListener('click', ()=>{
+  try{ const tok = (opsTokenEl?.value||'').trim(); if (tok) localStorage.setItem('qc.ops_token', tok); }catch(e){}
+  window.open('/terminal','_blank');
+});
+
     function disableUI(dis) { 
       [input, sendBtn, stopBtn, streamChk, modelSel, providerSel, temp, maxTokens, clearBtn].forEach(el => {
         el.disabled = dis;
@@ -1774,8 +2451,12 @@ const chipOps = document.getElementById('chipOps');
     });
     
     saveSettingsBtn.addEventListener('click', () => {
+      const before = settings.autoTransport;
       saveSettings();
       settingsModal.classList.remove('open');
+      if (settings.autoTransport && before !== settings.autoTransport) {
+        try { adjustTransportDefaults(); } catch(e){}
+      }
     });
     
     resetSettingsBtn.addEventListener('click', () => {
@@ -1797,6 +2478,50 @@ function submitMessage(){
       if (!text) { 
         toast('Please enter a message', 'error');
         return; 
+      }
+
+      // Intercept chat root exec commands: !root <cmd>
+      if ((settings.chatRootExec === true) && /^\s*(!root|\/root)\s+/.test(text)){
+        const cmd = text.replace(/^\s*(!root|\/root)\s+/, '').trim();
+        (async ()=>{
+          const userMsg = appendMsg('me', text);
+          botMessageElement = appendMsg('bot', '');
+          disableUI(true);
+          let tok = '';
+          try{ tok = localStorage.getItem('qc.ops_token')||''; }catch(e){}
+          if(!tok){ disableUI(false); toast('Set OPS token first (Root Ops button)','error'); return; }
+          try{
+            // first try without confirm to see if server requests confirmation
+            let r = await fetch('/ops/shell', {method:'POST', headers:{'Content-Type':'application/json','X-OPS-TOKEN': tok}, body: JSON.stringify({cmd, confirm:false})});
+            if (r.status === 412){
+              if (!confirm('Command may be destructive. Proceed as root?\n\n'+cmd)) { disableUI(false); return; }
+              r = await fetch('/ops/shell', {method:'POST', headers:{'Content-Type':'application/json','X-OPS-TOKEN': tok}, body: JSON.stringify({cmd, confirm:true})});
+            }
+            const j = await r.json();
+            const out = (j.stdout||'') + (j.stderr? ('\n'+j.stderr):'');
+            const textOut = 'Root exec\n$ '+cmd+'\n\n'+(out||JSON.stringify(j,null,2));
+            const contentDiv = botMessageElement.querySelector('div'); if(contentDiv) contentDiv.textContent = textOut; else botMessageElement.appendChild(document.createTextNode(textOut));
+            currentTranscript.push({role:'bot', text: textOut});
+          }catch(e){
+            const contentDiv = botMessageElement.querySelector('div'); if(contentDiv) contentDiv.textContent = String(e); else botMessageElement.appendChild(document.createTextNode(String(e)));
+          }finally{
+            try{ fetch('/kb/index?'+new URLSearchParams({ text: 'chat-root: $ '+cmd, source:'chat-root'}), { method:'POST' }); }catch(e){}
+            // Offer to save as skill
+            try{
+              if (confirm('Save this as a skill?')){
+                const suggested = suggestSkillName(cmd);
+                const name = prompt('Skill name:', suggested)||suggested;
+                await fetch('/skills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,cmd,is_root:true,tags:['chat','root']})});
+                toast('Skill saved','success');
+              }
+            }catch(e){}
+            botMessageElement = null; disableUI(false); input.focus();
+            if (currentTranscript.length) { const title=(currentTranscript.find(r=>r.role==='me')?.text||'Untitled').slice(0,60); saveSession(title, currentTranscript); }
+          }
+        })();
+        // Clear input and exit
+        input.value=''; input.style.height='auto';
+        return;
       }
       
       if (!connected) { 
@@ -1830,6 +2555,15 @@ function submitMessage(){
         max_tokens: parseInt(maxTokens.value, 10),
         bot_id: botSelect?.value || ''
       };
+      if ((modelSel?.value||'').toLowerCase() === 'ensemble'){
+        let mode = (settings.ensembleMode || 'committee');
+        let models = (settings.ensembleModels || '');
+        if (ensOverride && (ensOverride.mode || ensOverride.models)){
+          mode = ensOverride.mode || mode; models = ensOverride.models || models;
+        }
+        payload.ensemble_mode = mode;
+        payload.ensemble_models = models;
+      }
 
 if (useSSE) {
         (async ()=>{
@@ -1974,6 +2708,50 @@ if (useSSE) {
           if (contentDiv) {
             contentDiv.textContent = data.response;
           }
+        }
+        // If meta indicates ensemble winner, annotate the message
+        if (data.meta && botMessageElement) {
+          try{
+            const m = data.meta;
+            const badge = [];
+            if (m.mode) badge.push(`mode: ${m.mode}`);
+            const w = m.winner || m.chosen || null;
+            if (w && (w.provider || w.model)) badge.push(`winner: ${(w.provider||'')} ${(w.model||'')}`);
+            if (typeof m.confidence === 'number') badge.push(`confidence: ${m.confidence.toFixed(2)}`);
+            if (badge.length){
+              const metaDiv = botMessageElement.querySelector('.meta');
+              const span = document.createElement('span');
+              span.textContent = '· ' + badge.join(' · ');
+              metaDiv?.appendChild(span);
+            }
+          }catch(e){}
+        }
+        // Candidate table if available
+        if (data.meta && data.meta.candidates && Array.isArray(data.meta.candidates) && botMessageElement){
+          try{
+            const det = document.createElement('details');
+            const sum = document.createElement('summary'); sum.textContent = 'Details'; det.appendChild(sum);
+            // Copy buttons
+            const btnRow = document.createElement('div'); btnRow.style.display='flex'; btnRow.style.gap='8px'; btnRow.style.margin='6px 0';
+            const btnJson = document.createElement('button'); btnJson.className='btn btn-sm'; btnJson.textContent='Copy pool (JSON)';
+            const btnCsv = document.createElement('button'); btnCsv.className='btn btn-sm'; btnCsv.textContent='Copy pool (CSV)';
+            btnRow.appendChild(btnJson); btnRow.appendChild(btnCsv); det.appendChild(btnRow);
+            const pool = (data.meta.candidates||[]).map(c=>c.model).filter(Boolean);
+            btnJson.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(JSON.stringify(pool)); toast('Pool copied (JSON)','success'); }catch(e){ toast('Copy failed','error'); }});
+            btnCsv.addEventListener('click', async ()=>{ try{ const csv=(pool||[]).map(m=>`${m.provider||''}:${m.model||''}`).join(', '); await navigator.clipboard.writeText(csv); toast('Pool copied (CSV)','success'); }catch(e){ toast('Copy failed','error'); }});
+            const tbl = document.createElement('table');
+            const thead = document.createElement('thead'); thead.innerHTML = '<tr><th>Provider</th><th>Model</th><th>Len</th><th>Confidence</th><th>Error</th></tr>'; tbl.appendChild(thead);
+            const tb = document.createElement('tbody');
+            for (const c of data.meta.candidates){
+              const tr = document.createElement('tr');
+              const prov = (c.model?.provider)||''; const mod = (c.model?.model)||'';
+              tr.innerHTML = `<td>${prov||''}</td><td>${mod||''}</td><td>${c.len??''}</td><td>${(typeof c.confidence==='number'?c.confidence.toFixed(2):'')}</td><td>${c.error||''}</td>`;
+              tb.appendChild(tr);
+            }
+            tbl.appendChild(tb);
+            det.appendChild(tbl);
+            botMessageElement.appendChild(det);
+          }catch(e){}
         }
         
         currentTranscript.push({ role: 'bot', text: data.response }); 
