@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "zencoderai.zencoder"
+  ],
+  "unwantedRecommendations": [
+    "danielsanmedium.dscodegpt",
+    "openai.chatgpt",
+    "doublebot.doublebot"
+  ]
+}
