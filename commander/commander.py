@@ -232,6 +232,20 @@ async def ws(websocket: WebSocket):
                         "timeout_s": data.get("timeout_s"),
                         "system_prompt": data.get("system_prompt"),
                     }
+                # Built-in chat command: /self -> return self-status JSON
+                try:
+                    msg_norm = (message or "").strip().lower()
+                    if msg_norm in ("/self", "/status"):
+                        try:
+                            from commander.routes_self import self_status  # type: ignore
+                            payload = self_status()
+                            # Return as structured JSON to the client
+                            await websocket.send_json({"response": payload, "command": "self"})
+                        except Exception as e:
+                            await websocket.send_json({"error": f"self-status failed: {e}"})
+                        continue
+                except Exception:
+                    pass
                 # One-shot or streaming response
                 # Ensemble one-shot path
                 if is_json and data.get("model") == "ensemble":
