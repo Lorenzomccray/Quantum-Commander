@@ -122,18 +122,40 @@ def self_status() -> Dict[str, Any]:
         "name": os.getenv("ASSISTANT_NAME", "quantum-commander"),
         "version": os.getenv("ASSISTANT_VERSION", "0.0.0"),
     }
+    models = [_provider_info()]
+    tools = _tools_info()
+    policies = _policies_info()
+    env = {
+        "os": f"{platform.system()} {platform.release()}",
+        "python": platform.python_version(),
+        "repo_root": str(REPO_ROOT),
+    }
+    health = {
+        "uptime_s": int(time.time() - STARTED_AT),
+        "status": "ok",
+    }
+    ident = {**identity, **_git_info()}
+
+    # Build a compact summary for chat/UI
+    enabled_tools = ", ".join([t["name"] for t in tools if t.get("enabled")]) or "none"
+    prov = models[0].get("provider") or "(none)"
+    model = models[0].get("model") or "(unset)"
+    keys = models[0].get("providers_with_keys") or {}
+    keys_on = [k for k, v in keys.items() if v]
+    summary = (
+        f"{ident.get('name')}@{ident.get('branch') or '?'}({ident.get('sha') or '?'}) "
+        f"on {env['os']} py{env['python']} — provider: {prov}, model: {model}, "
+        f"keys: {','.join(keys_on) if keys_on else 'none'}, tools: {enabled_tools}, "
+        f"policy: {policies.get('exec_policy')} allowed: {len(policies.get('allowed_commands') or [])}, "
+        f"rules: {','.join(policies.get('rule_files') or []) or 'none'}, uptime: {health['uptime_s']}s"
+    )
+
     return {
-        "identity": {**identity, **_git_info()},
-        "models": [_provider_info()],
-        "tools": _tools_info(),
-        "policies": _policies_info(),
-        "environment": {
-            "os": f"{platform.system()} {platform.release()}",
-            "python": platform.python_version(),
-            "repo_root": str(REPO_ROOT),
-        },
-        "health": {
-            "uptime_s": int(time.time() - STARTED_AT),
-            "status": "ok",
-        },
+        "identity": ident,
+        "models": models,
+        "tools": tools,
+        "policies": policies,
+        "environment": env,
+        "health": health,
+        "summary": summary,
     }

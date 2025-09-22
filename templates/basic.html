@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>QC Basic</title>
+  <style>body{font:14px/1.5 system-ui,Segoe UI,Arial;margin:20px} #log{white-space:pre-wrap;border:1px solid #ccc;padding:10px;border-radius:6px;min-height:120px}</style>
+</head>
+<body>
+  <h1>Quantum Commander — Basic Check</h1>
+  <p>This page helps verify the backend is serving HTML and the WebSocket <code>/ws</code> endpoint accepts connections.</p>
+  <div>
+    <button id="connect">Connect WS</button>
+    <button id="send">Send test</button>
+    <span id="state">disconnected</span>
+  </div>
+  <div id="log"></div>
+  <h2>Self-check</h2>
+  <button id="self-refresh">Refresh</button>
+  <div id="self-summary" style="margin:8px 0;color:#555"></div>
+  <pre id="self-json" style="white-space:pre-wrap;border:1px solid #ccc;padding:10px;border-radius:6px;min-height:120px;max-height:300px;overflow:auto"></pre>
+  <script>
+    async function fetchSelf(){
+      const sum = document.getElementById('self-summary');
+      const box = document.getElementById('self-json');
+      try{
+        const r = await fetch('/self');
+        const j = await r.json();
+        sum.textContent = j.summary || 'No summary';
+        box.textContent = JSON.stringify(j,null,2);
+      }catch(e){ sum.textContent = 'Self-check failed: '+e; }
+    }
+    document.getElementById('self-refresh').onclick = fetchSelf;
+    fetchSelf();
+    const log = (m)=>{ const el=document.getElementById('log'); el.textContent += String(m)+"\n"; };
+    let ws=null;
+    document.getElementById('connect').onclick=()=>{
+      try{ if(ws) ws.close(); }catch(e){}
+      const url=(location.protocol==='https:'?'wss://':'ws://')+location.host+'/ws';
+      ws=new WebSocket(url);
+      ws.onopen=()=>{ document.getElementById('state').textContent='connected'; log('connected'); };
+      ws.onclose=()=>{ document.getElementById('state').textContent='disconnected'; log('closed'); };
+      ws.onerror=(e)=>{ document.getElementById('state').textContent='error'; console.error(e); log('ws error'); };
+      ws.onmessage=(ev)=>{ log('message: '+(typeof ev.data==='string'?ev.data:('bytes '+(ev.data?.byteLength||0)))); };
+    };
+    document.getElementById('send').onclick=()=>{ try{ ws && ws.send('hello'); log('sent: hello'); }catch(e){ log('send failed: '+e); } };
+  </script>
+</body>
+</html>
+

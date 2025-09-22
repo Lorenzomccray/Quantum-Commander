@@ -239,8 +239,8 @@ async def ws(websocket: WebSocket):
                         try:
                             from commander.routes_self import self_status  # type: ignore
                             payload = self_status()
-                            # Return as structured JSON to the client
-                            await websocket.send_json({"response": payload, "command": "self"})
+                            # Return structured JSON plus compact summary
+                            await websocket.send_json({"response": payload, "summary": payload.get("summary"), "command": "self"})
                         except Exception as e:
                             await websocket.send_json({"error": f"self-status failed: {e}"})
                         continue
