@@ -9,20 +9,42 @@
     document.addEventListener('DOMContentLoaded', () => {
       const panel = document.createElement('div');
       panel.id = 'qc-self-panel';
-      panel.style.cssText = 'position:fixed;right:14px;bottom:14px;width:360px;max-width:95vw;background:#0e141a;border:1px solid #1e2630;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:10px;z-index:9999;font:12px/1.5 system-ui,Segoe UI,Arial;color:#cfe;';
+      panel.style.cssText = 'position:fixed;right:14px;bottom:14px;width:380px;max-width:95vw;background:#0e141a;border:1px solid #1e2630;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:10px;z-index:9999;font:12px/1.5 system-ui,Segoe UI,Arial;color:#cfe;';
       panel.innerHTML = `
-        <div style="display:flex;align-items:center;gap:8px;justify-content:space-between;margin-bottom:6px;">
+        <div style=\"display:flex;align-items:center;gap:8px;justify-content:space-between;margin-bottom:6px;\">
           <strong>Self-check</strong>
           <div>
-            <button id="qc-self-refresh" style="background:#17222b;border:1px solid #22303d;color:#cfe;padding:4px 8px;border-radius:8px;cursor:pointer;">Refresh</button>
+            <button id=\"qc-self-refresh\" style=\"background:#17222b;border:1px solid #22303d;color:#cfe;padding:4px 8px;border-radius:8px;cursor:pointer;\">Refresh</button>
+            <button id=\"qc-open-ws\" title=\"Open Workspace\" style=\"background:#17222b;border:1px solid #22303d;color:#cfe;padding:4px 8px;border-radius:8px;cursor:pointer;\">Open WS</button>
           </div>
         </div>
-        <div id="qc-self-summary" style="color:#a9c7c2;margin-bottom:6px;white-space:pre-wrap"></div>
-        <pre id="qc-self-json" style="max-height:200px;overflow:auto;background:#0a0e14;padding:8px;border-radius:8px"></pre>
+        <div style=\"display:flex;gap:6px;margin:6px 0;align-items:center;\">
+          <label for=\"qc-token\" style=\"opacity:.8\">Token</label>
+          <input id=\"qc-token\" placeholder=\"VC token (stored locally)\" style=\"flex:1;background:#0a1016;color:#cfe;border:1px solid #22303d;border-radius:8px;padding:4px 6px\"/>
+          <button id=\"qc-save-token\" class=\"btn-sm\" style=\"background:#17222b;border:1px solid #22303d;color:#cfe;padding:4px 8px;border-radius:8px;cursor:pointer;\">Save</button>
+        </div>
+        <div style=\"display:grid;gap:6px;margin:6px 0;\">
+          <div style=\"display:flex;gap:6px;\">
+            <input id=\"qc-open-path\" placeholder=\"path[:line[:col]]\" style=\"flex:1;background:#0a1016;color:#cfe;border:1px solid #22303d;border-radius:8px;padding:4px 6px\"/>
+            <button id=\"qc-open-btn\" style=\"background:#19c8ab;border:0;color:#052a24;padding:4px 10px;border-radius:8px;cursor:pointer;font-weight:700\">Open</button>
+          </div>
+          <div style=\"display:flex;gap:6px;\">
+            <input id=\"qc-diff-left\" placeholder=\"left path\" style=\"flex:1;background:#0a1016;color:#cfe;border:1px solid #22303d;border-radius:8px;padding:4px 6px\"/>
+            <input id=\"qc-diff-right\" placeholder=\"right path\" style=\"flex:1;background:#0a1016;color:#cfe;border:1px solid #22303d;border-radius:8px;padding:4px 6px\"/>
+            <button id=\"qc-diff-btn\" style=\"background:#19c8ab;border:0;color:#052a24;padding:4px 10px;border-radius:8px;cursor:pointer;font-weight:700\">Diff</button>
+          </div>
+        </div>
+        <div id=\"qc-self-summary\" style=\"color:#a9c7c2;margin-bottom:6px;white-space:pre-wrap\"></div>
+        <pre id=\"qc-self-json\" style=\"max-height:220px;overflow:auto;background:#0a0e14;padding:8px;border-radius:8px\"></pre>
       `;
       document.body.appendChild(panel);
       const $sum = document.getElementById('qc-self-summary');
       const $json = document.getElementById('qc-self-json');
+      const $token = document.getElementById('qc-token');
+      // Load saved token
+      try { $token.value = localStorage.getItem('qc_vc_token') || ''; } catch(e) {}
+      function getToken(){ return ($token.value||'').trim(); }
+      function saveToken(){ try{ localStorage.setItem('qc_vc_token', getToken()); }catch(e){} }
       async function fetchSelf(){
         try{
           const r = await fetch('/self');
@@ -33,7 +55,32 @@
           $sum.textContent = 'Self-check failed: '+e;
         }
       }
+      async function callOpen(){
+        const t = getToken(); if(!t){ alert('Set VC token first'); return; }
+        const raw = (document.getElementById('qc-open-path').value||'').trim();
+        if(!raw) return;
+        let path = raw, line=1, col=1;
+        const parts = raw.split(':');
+        if(parts.length>1){ path=parts[0]; if(/^[0-9]+$/.test(parts[1])) line=parseInt(parts[1],10); }
+        if(parts.length>2 && /^[0-9]+$/.test(parts[2])) col=parseInt(parts[2],10);
+        await fetch(`/vscode/open?path=${encodeURIComponent(path)}&line=${line}&col=${col}`,{method:'POST', headers:{'X-VC-Token':t}});
+      }
+      async function callDiff(){
+        const t = getToken(); if(!t){ alert('Set VC token first'); return; }
+        const L = (document.getElementById('qc-diff-left').value||'').trim();
+        const R = (document.getElementById('qc-diff-right').value||'').trim();
+        if(!L||!R) return;
+        await fetch(`/vscode/diff?left=${encodeURIComponent(L)}&right=${encodeURIComponent(R)}`,{method:'POST', headers:{'X-VC-Token':t}});
+      }
+      async function openWorkspace(){
+        const t=getToken(); if(!t){ alert('Set VC token first'); return; }
+        await fetch('/vscode/open-workspace',{method:'POST', headers:{'X-VC-Token':t}});
+      }
       document.getElementById('qc-self-refresh').onclick = fetchSelf;
+      document.getElementById('qc-save-token').onclick = saveToken;
+      document.getElementById('qc-open-btn').onclick = callOpen;
+      document.getElementById('qc-diff-btn').onclick = callDiff;
+      document.getElementById('qc-open-ws').onclick = openWorkspace;
       fetchSelf();
     });
   </script>
