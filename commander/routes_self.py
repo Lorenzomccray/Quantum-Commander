@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from app.settings import settings
 
@@ -158,4 +158,57 @@ def self_status() -> Dict[str, Any]:
         "environment": env,
         "health": health,
         "summary": summary,
+    }
+
+
+def _ver(cmd: List[str]) -> Optional[str]:
+    try:
+        cp = subprocess.run(cmd, text=True, capture_output=True, check=True)
+        out = (cp.stdout or cp.stderr or "").strip()
+        return out.splitlines()[0][:200]
+    except Exception:
+        return None
+
+
+def _disk_usage(path: Path) -> Dict[str, Any]:
+    try:
+        st = os.statvfs(str(path))
+        total = st.f_frsize * st.f_blocks
+        free = st.f_frsize * st.f_bavail
+        return {"total": total, "free": free}
+    except Exception:
+        return {"total": None, "free": None}
+
+
+@router.get("/self/diagnostics", summary="Environment and dependency diagnostics")
+def self_diagnostics() -> Dict[str, Any]:
+    deps = {
+        "git": _ver(["git", "--version"]),
+        "python": platform.python_version(),
+        "node": _ver(["node", "--version"]),
+        "npm": _ver(["npm", "--version"]),
+        "pnpm": _ver(["pnpm", "--version"]),
+        "pipx": _ver(["pipx", "--version"]),
+        "dotnet": _ver(["dotnet", "--version"]),
+        "podman": _ver(["podman", "--version"]),
+        "docker": _ver(["docker", "--version"]),
+        "jq": _ver(["jq", "--version"]),
+        "yq": _ver(["yq", "--version"]),
+        "rg": _ver(["rg", "--version"]),
+        "fd": _ver(["fd", "--version"]),
+        "gh": _ver(["gh", "--version"]),
+    }
+    repo = _git_info()
+    disk = _disk_usage(REPO_ROOT)
+    return {
+        "identity": {
+            "name": os.getenv("ASSISTANT_NAME", "quantum-commander"),
+            "version": os.getenv("ASSISTANT_VERSION", "0.0.0"),
+        },
+        "repo": repo,
+        "deps": deps,
+        "disk": disk,
+        "env": {
+            "os": f"{platform.system()} {platform.release()}",
+        },
     }

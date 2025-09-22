@@ -138,6 +138,12 @@ try:
     app.include_router(self_router)
 except Exception:
     pass
+# VS Code integration router
+try:
+    from commander.routes_vscode import router as vscode_router  # type: ignore
+    app.include_router(vscode_router)
+except Exception:
+    pass
 
 # Logger
 log = logging.getLogger("qc")
@@ -239,10 +245,46 @@ async def ws(websocket: WebSocket):
                         try:
                             from commander.routes_self import self_status  # type: ignore
                             payload = self_status()
-                            # Return structured JSON plus compact summary
                             await websocket.send_json({"response": payload, "summary": payload.get("summary"), "command": "self"})
                         except Exception as e:
                             await websocket.send_json({"error": f"self-status failed: {e}"})
+                        continue
+                    # Built-in: /open repo-relative-path[:line[:col]]
+                    if msg_norm.startswith("/open "):
+                        try:
+                            arg = message.split(" ",1)[1].strip()
+                            path_part = arg
+                            line = 1
+                            col = 1
+                            if ":" in arg:
+                                parts = arg.split(":")
+                                path_part = parts[0]
+                                if len(parts) > 1 and parts[1].isdigit():
+                                    line = int(parts[1])
+                                if len(parts) > 2 and parts[2].isdigit():
+                                    col = int(parts[2])
+                            from commander.routes_vscode import vscode_open  # type: ignore
+                            # simulate header token via env VC_TOKEN during internal call
+                            os.environ.setdefault("VC_TOKEN", os.getenv("VC_TOKEN", os.getenv("OPS_TOKEN", "")))
+                            res = vscode_open(path_part, line=line, col=col, x_vc_token=os.environ.get("VC_TOKEN",""))
+                            await websocket.send_json({"response": res, "command": "open"})
+                        except Exception as e:
+                            await websocket.send_json({"error": f"open failed: {e}"})
+                        continue
+                    # Built-in: /diff left right
+                    if msg_norm.startswith("/diff "):
+                        try:
+                            args = message.split()
+                            if len(args) >= 3:
+                                left, right = args[1], args[2]
+                                from commander.routes_vscode import vscode_diff  # type: ignore
+                                os.environ.setdefault("VC_TOKEN", os.getenv("VC_TOKEN", os.getenv("OPS_TOKEN", "")))
+                                res = vscode_diff(left, right, x_vc_token=os.environ.get("VC_TOKEN",""))
+                                await websocket.send_json({"response": res, "command": "diff"})
+                            else:
+                                await websocket.send_json({"error": "usage: /diff <left> <right>"})
+                        except Exception as e:
+                            await websocket.send_json({"error": f"diff failed: {e}"})
                         continue
                 except Exception:
                     pass
