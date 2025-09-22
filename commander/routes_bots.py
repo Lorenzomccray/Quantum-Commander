@@ -1,25 +1,14 @@
 from __future__ import annotations
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
-from pathlib import Path
-import json, uuid, time, os
+import time
+from commander.bots_dal import BotsDAL
 
 router = APIRouter()
-DB_PATH = Path(os.environ.get("QC_BOTS_DB","data/bots.json"))
-DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-if not DB_PATH.exists(): DB_PATH.write_text("[]", encoding="utf-8")
-
-def _load():
-    try: return json.loads(DB_PATH.read_text("utf-8"))
-    except Exception: return []
-
-def _save(bots):
-    tmp = DB_PATH.with_suffix(".json.tmp")
-    tmp.write_text(json.dumps(bots, ensure_ascii=False, indent=2), "utf-8")
-    tmp.replace(DB_PATH)
+dal = BotsDAL()
 
 class BotProfile(BaseModel):
-    id: str = Field(default_factory=lambda: uuid.uuid4().hex)
+    id: str | None = None
     name: str
     emoji: str = "🤖"
     system_prompt: str = "You are a helpful assistant."
@@ -28,8 +17,8 @@ class BotProfile(BaseModel):
     temperature: float = 0.2
     max_tokens: int = 800
     tools_enabled: bool = False
-    created_at: float = Field(default_factory=lambda: time.time())
-    updated_at: float = Field(default_factory=lambda: time.time())
+    created_at: float | None = None
+    updated_at: float | None = None
 
 class BotUpdate(BaseModel):
     name: str | None = None
@@ -43,40 +32,30 @@ class BotUpdate(BaseModel):
 
 @router.get("/bots")
 def list_bots():
-    return {"ok": True, "bots": _load()}
+    return {"ok": True, "bots": dal.list()}
 
 @router.post("/bots")
 def create_bot(bot: BotProfile):
-    bots = _load()
-    bots.insert(0, bot.model_dump())
-    _save(bots)
-    return {"ok": True, "bot": bot}
+    doc = bot.model_dump(exclude_none=True)
+    if "created_at" not in doc: doc["created_at"] = time.time()
+    created = dal.create(doc)
+    return {"ok": True, "bot": created}
 
 @router.get("/bots/{bot_id}")
 def get_bot(bot_id: str):
-    for b in _load():
-        if b["id"] == bot_id:
-            return {"ok": True, "bot": b}
-    raise HTTPException(404, "bot not found")
+    b = dal.get(bot_id)
+    if not b: raise HTTPException(404, "bot not found")
+    return {"ok": True, "bot": b}
 
 @router.patch("/bots/{bot_id}")
 def update_bot(bot_id: str, patch: BotUpdate):
-    bots = _load()
-    for i,b in enumerate(bots):
-        if b["id"] == bot_id:
-            data = b | {k:v for k,v in patch.model_dump(exclude_none=True).items()}
-            data["updated_at"] = time.time()
-            bots[i] = data
-            _save(bots)
-            return {"ok": True, "bot": data}
-    raise HTTPException(404, "bot not found")
+    updated = dal.update(bot_id, patch.model_dump(exclude_none=True))
+    if not updated: raise HTTPException(404, "bot not found")
+    return {"ok": True, "bot": updated}
 
 @router.delete("/bots/{bot_id}")
 def delete_bot(bot_id: str):
-    bots = _load()
-    nb = [b for b in bots if b["id"] != bot_id]
-    if len(nb) == len(bots):
-        raise HTTPException(404, "bot not found")
-    _save(nb)
+    ok = dal.delete(bot_id)
+    if not ok: raise HTTPException(404, "bot not found")
     return {"ok": True, "deleted": bot_id}
 

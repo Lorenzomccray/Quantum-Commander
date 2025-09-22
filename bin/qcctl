@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+UNIT="qc.service"
+USERCTL=(systemctl --user)
+JOUR=(journalctl --user -u "$UNIT")
+
+usage() {
+  cat <<'EOT'
+qcctl - manage Quantum Commander (systemd user service)
+
+Usage: qcctl <cmd> [args]
+Commands:
+  start       Start the service
+  stop        Stop the service
+  restart     Kill strays, restart, and wait until ready
+  ready       Wait until service is ready
+  status      Show status (non-paged)
+  enable      Enable service at login
+  disable     Disable service at login
+  reload      Reload systemd user units
+  logs        Follow logs (Ctrl-C to stop)
+  log         Show last 200 log lines
+  health      Quick HTTP checks (/basic, /ui)
+  open        Open the UI in the default browser
+  kill-strays Kill any non-systemd listeners on :8000
+  version     Print script version
+  help        Show this help
+EOT
+}
+
+kill_strays_f() {
+  PIDS=$(ss -ltnp 2>/dev/null | awk '/:8000/ { if (match($0, /pid=([0-9]+)/, m)) print m[1] }' | sort -u)
+  if [ -n "$PIDS" ]; then
+    echo "Killing: $PIDS"
+    for p in $PIDS; do kill "$p" 2>/dev/null || true; done
+    sleep 0.3
+    for p in $PIDS; do kill -9 "$p" 2>/dev/null || true; done
+  fi
+}
+
+wait_ready() {
+  # Wait for port 8000 to be listening (max ~10s)
+  for i in $(seq 1 100); do
+    if ss -ltnp 2>/dev/null | grep -q ":8000"; then break; fi
+    sleep 0.1
+  done
+  # Poll /basic for HTTP 200 (max ~10s)
+  for i in $(seq 1 40); do
+    code=$(curl -sS -m 2 -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/basic || true)
+    if [ "$code" = "200" ]; then
+      echo "Ready (HTTP 200)"; return 0
+    fi
+    sleep 0.25
+  done
+  echo "Not ready after timeout" >&2
+  ${JOUR[@]} -n 50 --no-pager || true
+  return 1
+}
+
+cmd=${1:-help}
+shift || true
+
+case "$cmd" in
+  start)    kill_strays_f; "${USERCTL[@]}" start "$UNIT" ;;
+  stop)     "${USERCTL[@]}" stop "$UNIT" ;;
+  restart)  kill_strays_f; "${USERCTL[@]}" daemon-reload; "${USERCTL[@]}" restart "$UNIT"; wait_ready ;;
+  ready)    wait_ready ;;
+  status)   "${USERCTL[@]}" --no-pager status "$UNIT" ;;
+  enable)   "${USERCTL[@]}" enable "$UNIT" ;;
+  disable)  "${USERCTL[@]}" disable "$UNIT" ;;
+  reload)   "${USERCTL[@]}" daemon-reload ;;
+  logs)     exec "${JOUR[@]}" -f "$@" ;;
+  log)      exec "${JOUR[@]}" -n 200 --no-pager "$@" ;;
+  health)
+    for url in http://127.0.0.1:8000/basic http://127.0.0.1:8000/ui; do
+      printf "%s -> " "$url"
+      curl -sS -m 6 -o /dev/null -w "%{http_code} time=%{time_total}\n" "$url" || echo "timeout"
+    done
+    ;;
+  open)
+    if command -v xdg-open >/dev/null 2>&1; then
+      xdg-open "http://127.0.0.1:8000/ui" >/dev/null 2>&1 &
+    else
+      echo "Open http://127.0.0.1:8000/ui"
+    fi
+    ;;
+  kill-strays)
+    kill_strays_f || true
+    if ! ss -ltnp 2>/dev/null | grep -q ":8000"; then echo "No listeners on :8000"; fi
+    ;;
+  version)  echo "qcctl 1.0" ;;
+  help|*)   usage ;;
+esac
+

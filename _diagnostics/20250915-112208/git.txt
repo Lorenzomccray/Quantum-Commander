@@ -1,0 +1,137 @@
+=== GIT STATUS ===
+ M app/main.py
+ M app/settings.py
+ M commander/agent.py
+ M commander/commander.py
+ M commander/routes_bots.py
+ M commander/routes_chats.py
+ M commander/routes_kb.py
+ M commander/routes_sse.py
+ M package.json
+ M requirements.txt
+ M templates/index.html
+?? .env.save
+?? .warp/workflows/quantum-commander.yaml
+?? Makefile
+?? _diagnostics/20250915-104202/bots.json
+?? _diagnostics/20250915-104202/filehashes.txt
+?? _diagnostics/20250915-104202/files.json
+?? _diagnostics/20250915-104202/git.txt
+?? _diagnostics/20250915-104202/health.json
+?? _diagnostics/20250915-104202/patches.auto.ls.txt
+?? _diagnostics/20250915-104202/ps.txt
+?? _diagnostics/20250915-104202/python.txt
+?? _diagnostics/20250915-104202/qc-blueprint-watcher.journal.txt
+?? _diagnostics/20250915-104202/qc-blueprint-watcher.status.txt
+?? _diagnostics/20250915-104202/qc-blueprint-watcher.timer.txt
+?? _diagnostics/20250915-104202/qc-blueprint-watcher.timer.unit.txt
+?? _diagnostics/20250915-104202/qc-blueprint-watcher.unit.txt
+?? _diagnostics/20250915-104202/quantum-commander.journal.txt
+?? _diagnostics/20250915-104202/quantum-commander.status.txt
+?? _diagnostics/20250915-104202/quantum-commander.unit.txt
+?? _diagnostics/20250915-104202/requirements.txt
+?? _diagnostics/20250915-104202/routes.list.txt
+?? _diagnostics/20250915-104202/routes.scan.txt
+?? _diagnostics/20250915-104202/ss.txt
+?? _diagnostics/20250915-104202/sse.http
+?? _diagnostics/20250915-104202/system.txt
+?? _diagnostics/20250915-112208/git.txt
+?? _diagnostics/20250915-112208/system.txt
+?? app/__pycache__/__init__.cpython-313.pyc
+?? app/__pycache__/main.cpython-313.pyc
+?? app/__pycache__/settings.cpython-313.pyc
+?? bin/qc-launch-ui.sh
+?? bin/qcctl
+?? commander/__pycache__/__init__.cpython-313.pyc
+?? commander/__pycache__/agent.cpython-313.pyc
+?? commander/__pycache__/bots_dal.cpython-313.pyc
+?? commander/__pycache__/commander.cpython-313.pyc
+?? commander/__pycache__/ensemble.cpython-313.pyc
+?? commander/__pycache__/routes_bots.cpython-313.pyc
+?? commander/__pycache__/routes_chats.cpython-313.pyc
+?? commander/__pycache__/routes_diagnostics.cpython-313.pyc
+?? commander/__pycache__/routes_ensemble.cpython-313.pyc
+?? commander/__pycache__/routes_extensions.cpython-313.pyc
+?? commander/__pycache__/routes_files.cpython-313.pyc
+?? commander/__pycache__/routes_kb.cpython-313.pyc
+?? commander/__pycache__/routes_ops.cpython-313.pyc
+?? commander/__pycache__/routes_pty_ws.cpython-313.pyc
+?? commander/__pycache__/routes_search.cpython-313.pyc
+?? commander/__pycache__/routes_skills.cpython-313.pyc
+?? commander/__pycache__/routes_sse.cpython-313.pyc
+?? commander/__pycache__/routes_supabase.cpython-313.pyc
+?? commander/__pycache__/routes_vision.cpython-313.pyc
+?? commander/bots_dal.py
+?? commander/ensemble.py
+?? commander/routes_diagnostics.py
+?? commander/routes_ensemble.py
+?? commander/routes_extensions.py
+?? commander/routes_ops.py
+?? commander/routes_pty_ws.py
+?? commander/routes_search.py
+?? commander/routes_skills.py
+?? commander/routes_supabase.py
+?? commander/routes_vision.py
+?? data/bots.json
+?? data/chats.json
+?? data/kb.json
+?? data/logs/ensemble_20250907.log
+?? data/logs/ensemble_20250910.log
+?? data/logs/ensemble_20250913.log
+?? data/logs/ensemble_20250914.log
+?? data/logs/ensemble_20250915.log
+?? data/skills.json
+?? deploy/README.md
+?? deploy/caddy.template.json
+?? deploy/nginx.conf
+?? deploy/render_nginx.sh
+?? extensions/__init__.py
+?? extensions/notifications.py
+?? logs/uvicorn-20250910-204949.out
+?? logs/uvicorn-20250910-205039.out
+?? logs/uvicorn.log
+?? logs/warp_smart_run-20250906-223558.log
+?? mcp/qc_mcp.py
+?? scripts/migrate_to_supabase.py
+?? scripts/run-backend.sh
+?? scripts/setup_gunicorn_service.sh
+?? static/qc-icon.png
+?? supabase/migrations/2025-09-06-bots.sql
+?? templates/basic.html
+?? templates/terminal.html
+?? templates/user_terminal.html
+?? tests/__pycache__/conftest.cpython-313-pytest-8.4.2.pyc
+?? tests/__pycache__/test_bots.cpython-313-pytest-8.4.2.pyc
+?? tests/__pycache__/test_files.cpython-313-pytest-8.4.2.pyc
+?? tests/__pycache__/test_health.cpython-313-pytest-8.4.2.pyc
+?? tests/__pycache__/test_kb.cpython-313-pytest-8.4.2.pyc
+?? tests/__pycache__/test_sse.cpython-313-pytest-8.4.2.pyc
+?? tests/__pycache__/test_ws.cpython-313-pytest-8.4.2.pyc
+?? uploads/_meta.json
+?? uploads/c54261ac9f354143b3794db614eed9c5_hosts
+
+=== RECENT COMMITS ===
+c43633c Fix: use ASCII triple-quoted SYSTEM_PROMPT to avoid syntax issues with unicode punctuation
+35d4e2a Assistant behavior: interactive clarify/plan style; document and prefer RUN_USER/RUN_ROOT and new EXT_INSTALL/EXT_CALL directives; prompt for 'proceed' to execute.
+36d6ff0 UI: add Settings toggle to auto-execute on 'proceed' and client logic to parse last assistant directives (RUN_*, EXT_*) and run them; store raw assistant text for parsing.
+a396d7e UI: support EXT_INSTALL/EXT_CALL directives (install/call extensions from chat); keep RUN_USER/RUN_ROOT. Add client helpers for /extensions APIs.
+635a8f5 Add WARP.md: Warp command cheat sheet and architecture overview
+c533d22 test: add WebSocket streaming and cancel tests
+0e27b5f test: fix sys.path setup in conftest for package imports
+ee95eb3 test(ci): add pytest suite (health, files, kb, bots, SSE) and GitHub Actions workflow
+2819d34 feat: WS cancel id guard; CORS + logging; robust upload limits with atomic metadata; SSE keepalive + logs; health capabilities; SSE done autosave; deps tidy
+7c47e54 feat: native system_prompt for bots (agent + SSE + WS meta); buffered SSE parsing in UI
+e49a07d feat(ui): AbortController-based cancel for SSE
+5d733fa feat: SSE graceful fallback; minimal WS cancel; UI sends cancel with req id
+e0e42c8 docs: document SSE, Files, KB, Chats routes and SSE streaming caveat in README
+984b753 feat: add SSE streaming, file uploads, KB + chats routes; wire UI; pin python-multipart
+0ed1056 feat(bots): add bot profiles (CRUD) via FastAPI router and UI selector/modal; wire into app and inject bot_id in WS payload; add agent-side bot overrides (system prompt + defaults). fix(openai): use Chat Completions across models; omit temperature/tokens for GPT-5/O* families; pin httpx==0.27.2 for SDK compat.
+1493605 Add provider-backed agent (OpenAI/Anthropic/Groq) using app.settings; pin pydantic-settings
+71ffd5a Load .env with python-dotenv and ignore .env/.run
+a91ada9 Add make_agent fallback stub to avoid NameError and echo responses
+e61f8bb Merge branch 'main' of github.com:Lorenzomccray/quantum-commander
+3471804 Switch to vanilla FastAPI WebSocket with raw text; repo-root templates/static; minimal error handling
+
+=== REMOTES ===
+origin	git@github.com:Lorenzomccray/quantum-commander.git (fetch)
+origin	git@github.com:Lorenzomccray/quantum-commander.git (push)

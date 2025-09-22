@@ -47,7 +47,8 @@
       function saveToken(){ try{ localStorage.setItem('qc_vc_token', getToken()); }catch(e){} }
       async function fetchSelf(){
         try{
-          const r = await fetch('/self');
+          const headers = {}; try { const t = (document.getElementById('qc-token').value||'').trim(); if(t) headers['X-Auth-Token'] = t; } catch(e) {}
+          const r = await fetch('/self', {headers});
           const j = await r.json();
           $sum.textContent = j.summary || 'No summary';
           $json.textContent = JSON.stringify(j,null,2);

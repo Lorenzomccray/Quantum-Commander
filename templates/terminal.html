@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Quantum Terminal Pro</title>
+  <link rel="icon" href="/static/qc-icon.png" type="image/png"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.5.0/css/xterm.min.css">
+  <style>
+    :root{--bg:#0b0c10;--panel:#0f1318;--ink:#e6e6e6;--muted:#9aa0a6;--accent:#5eead4;--danger:#ff6b6b;--radius:12px}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 ui-sans-serif,system-ui,Inter,Segoe UI,Arial}
+    header{display:flex;gap:8px;align-items:center;padding:10px 12px;background:linear-gradient(180deg,rgba(17,22,29,.95),rgba(17,22,29,.85));border-bottom:1px solid #1e2630;position:sticky;top:0;z-index:2}
+    .badge{padding:4px 8px;border-radius:999px;background:#122027;border:1px solid #1f323d}
+    .spacer{flex:1}
+    input,button,select{background:#0d1218;border:1px solid #1e2630;color:#e6e6e6;border-radius:8px;padding:6px 8px}
+    button{cursor:pointer}
+    button.primary{background:linear-gradient(180deg,#19c8ab,#12a08c);border:0;color:#052a24;font-weight:700}
+    .warn{color:#ffb4b4}
+    #termWrap{position:fixed;inset:58px 12px 12px 12px;display:flex;gap:12px}
+    #left{flex:1;display:flex;flex-direction:column}
+    #toolbar{display:flex;gap:8px;margin:0 0 8px 0}
+    #term{flex:1;border:1px solid #1e2630;border-radius:12px;overflow:hidden}
+    #side{width:300px;display:flex;flex-direction:column;gap:8px}
+    .card{background:rgba(17,22,29,.6);border:1px solid #1e2630;border-radius:12px;padding:10px}
+    .row{display:flex;gap:8px;align-items:center}
+    .toggle{display:flex;gap:8px;align-items:center}
+    #palette{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center}
+    #palette .panel{width:min(720px,92%);background:#0f1318;border:1px solid #1e2630;border-radius:12px;padding:12px}
+    #palette input{width:100%}
+    .hint{color:#9aa0a6;font-size:12px;margin-top:6px}
+  </style>
+</head>
+<body>
+<header>
+  <span class="badge">Root PTY</span>
+  <input id="token" type="password" placeholder="OPS_TOKEN" style="min-width:240px"/>
+  <button id="connect" class="primary">Connect</button>
+  <div class="spacer"></div>
+  <span class="badge" id="state">disconnected</span>
+</header>
+
+<div id="termWrap">
+  <div id="left">
+    <div id="toolbar" class="row">
+      <button id="clearBtn">Clear</button>
+      <button id="copySel">Copy selection</button>
+      <label class="toggle"><input type="checkbox" id="guard" checked/> Guard destructive</label>
+      <select id="theme">
+        <option value="dark" selected>Dark</option>
+        <option value="light">Light</option>
+        <option value="matrix">Matrix</option>
+      </select>
+      <span class="hint">Ctrl+Shift+P: Command Palette</span>
+    </div>
+    <div id="term"></div>
+  </div>
+  <aside id="side">
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <strong>Quantum Shortcuts</strong>
+        <small class="hint">local only</small>
+      </div>
+      <div class="row"><button class="run" data-cmd="dnf check-update -y || true">Check updates</button></div>
+      <div class="row"><button class="run" data-cmd="systemctl --user --no-pager --full status quantum-commander | sed -n \"1,60p\"">QC status</button></div>
+      <div class="row"><button class="run" data-cmd="journalctl --user -u quantum-commander -n 200 --no-pager">QC logs (tail)</button></div>
+      <div class="row"><button class="run" data-cmd="curl -s http://127.0.0.1:8000/health | jq .">/health</button></div>
+      <div class="row warn"><small>⚠️ Running as root. Guard blocks rm -rf, mkfs, wipefs, dd to disks, dnf remove *, userdel, chmod -R /, etc.</small></div>
+    </div>
+  </aside>
+</div>
+
+<div id="palette">
+  <div class="panel">
+    <input id="palInput" placeholder="Run command… (e.g., dnf upgrade --refresh -y)"/>
+    <div class="hint">Press Enter to run • Esc to close</div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xterm@5.5.0/lib/xterm.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.min.js"></script>
+<script>
+const term = new window.Terminal({cursorBlink:true, convertEol:true, fontFamily:"ui-monospace,Menlo,Monaco,Consolas,monospace"});
+let fit = null;
+try {
+  if (window.FitAddon && window.FitAddon.FitAddon) {
+    fit = new window.FitAddon.FitAddon();
+    term.loadAddon(fit);
+  }
+} catch (e) { /* ignore fit addon errors */ }
+term.open(document.getElementById("term"));
+if (fit && typeof fit.fit === "function") { try { fit.fit(); } catch(e){} }
+window.addEventListener("resize", ()=>{ if (fit && typeof fit.fit === "function") { try { fit.fit(); } catch(e){} } });
+let ws=null, guard=true;
+
+function setTheme(mode){
+  const el=document.documentElement;
+  if(mode==="light"){ el.style.setProperty("--bg","#f6f7f9"); el.style.setProperty("--panel","#ffffff"); el.style.setProperty("--ink","#1a1a1a"); el.style.setProperty("--muted","#5f6b7a"); }
+  else if(mode==="matrix"){ el.style.setProperty("--bg","#000"); el.style.setProperty("--panel","#050505"); el.style.setProperty("--ink","#00ff9c"); el.style.setProperty("--muted","#00c97a"); }
+  else { el.style.setProperty("--bg","#0b0c10"); el.style.setProperty("--panel","#0f1318"); el.style.setProperty("--ink","#e6e6e6"); el.style.setProperty("--muted","#9aa0a6"); }
+}
+document.getElementById("theme").onchange = e=> setTheme(e.target.value);
+setTheme("dark");
+
+function setState(s){ document.getElementById("state").textContent=s; }
+function connect(){
+  const token=document.getElementById("token").value.trim();
+  if(!token){ alert("Enter OPS_TOKEN"); return; }
+  try { localStorage.setItem("qc.ops_token", token); } catch(e) {}
+  const proto=location.protocol==="https:"?"wss":"ws";
+  const url=proto+"://"+location.host+"/ops/pty?token="+encodeURIComponent(token);
+  ws=new WebSocket(url); ws.binaryType="arraybuffer";
+  ws.onopen=()=>{ setState("connected"); fit.fit(); ws.send(JSON.stringify({type:"resize", cols:term.cols, rows:term.rows})); };
+  ws.onclose=(ev)=>{ setState(`disconnected (${ev.code||''})`); };
+  ws.onerror=(ev)=>{ setState("error"); try { console.error('ws error', ev); } catch(e){} };
+  ws.onmessage=ev=>{
+    if(ev.data instanceof ArrayBuffer){ term.write(new Uint8Array(ev.data)); }
+    else { term.write(String(ev.data)); }
+  };
+  term.onData(d=>{
+    if(ws && ws.readyState===1){ ws.send(new TextEncoder().encode(d)); }
+  });
+  window.addEventListener("resize", ()=>{ if(ws && ws.readyState===1){ fit.fit(); ws.send(JSON.stringify({type:"resize", cols:term.cols, rows:term.rows})); }});
+}
+document.getElementById("connect").onclick=connect;
+document.getElementById("clearBtn").onclick=()=>term.reset();
+document.getElementById("copySel").onclick=()=>{ const s=term.getSelection(); if(s){ navigator.clipboard.writeText(s);} };
+document.getElementById("guard").onchange=e=> guard=e.target.checked;
+
+document.querySelectorAll(".run").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    const cmd=b.dataset.cmd;
+    runOneLiner(cmd);
+  });
+});
+
+function isDangerous(cmd){
+  const bad=[
+    /\brm\s+-rf\s+\/(?!home\/[^ ]+)/i,
+    /\bmkfs\w*\s+/i, /\bwipefs\b/i, /\bdd\s+if=\/dev\//i, /\bdd\s+of=\/dev\//i,
+    /\bdnf\s+remove(\s+|-y\s+)\*/i, /\buserdel\b/i,
+    /\bchmod\s+-R\s+7[0-7][0-7]\s+\/\b/, /\bchown\s+-R\s+root:root\s+\/\b/
+  ];
+  return bad.some(rx=>rx.test(cmd));
+}
+
+function runOneLiner(cmd){
+  if(!ws || ws.readyState!==1){ alert("Connect first"); return; }
+  if(guard && isDangerous(cmd)){
+    if(!confirm("⚠️ This looks destructive:\n\n"+cmd+"\n\nRun as root anyway?")) return;
+  }
+  ws.send(new TextEncoder().encode(cmd+"\n"));
+}
+
+const palette=document.getElementById("palette");
+const palInput=document.getElementById("palInput");
+window.addEventListener("keydown", (e)=>{
+  if(e.ctrlKey && e.shiftKey && e.code==="KeyP"){ e.preventDefault(); palette.style.display="flex"; palInput.value=""; palInput.focus(); }
+  if(e.key==="Escape" && palette.style.display==="flex"){ palette.style.display="none"; }
+});
+palInput.addEventListener("keydown", e=>{
+  if(e.key==="Enter"){
+    const cmd=palInput.value.trim(); palette.style.display="none";
+    if(cmd){ runOneLiner(cmd); }
+  }
+});
+
+// Auto-fill and auto-connect if a token is saved
+window.addEventListener("load", ()=>{
+  try {
+    const saved = localStorage.getItem("qc.ops_token");
+    if (saved) {
+      const tokenEl = document.getElementById("token");
+      if (tokenEl) tokenEl.value = saved;
+      const btn = document.getElementById("connect");
+      if (btn) btn.click();
+    }
+  } catch (e) {}
+});
+</script>
+</body></html>
+

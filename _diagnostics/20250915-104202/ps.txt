@@ -1,0 +1,102 @@
+    PID    PPID STIME CMD
+   1536       1 10:26 /usr/lib/systemd/systemd --user
+   1588    1536 10:26 (sd-pam)
+   1664    1536 10:26 /home/lorenzomccray/quantum-commander/.venv/bin/python -m uvicorn commander.commander:app --fd 3
+   3492       1 10:26 /usr/bin/gnome-keyring-daemon --daemonize --login
+   3516    3480 10:26 /usr/libexec/gdm-wayland-session /usr/bin/gnome-session
+   3519    1536 10:26 /usr/bin/dbus-broker-launch --scope user
+   3523    3519 10:26 dbus-broker --log 4 --controller 9 --machine-id 2b0dc8ea580d4666949e7b2a23cbf53d --max-bytes 100000000000000 --max-fds 25000000000000 --max-matches 5000000000
+   3525    3516 10:26 /usr/libexec/gnome-session-binary
+   3582    1536 10:26 /usr/libexec/gnome-remote-desktop-daemon
+   3583    1536 10:26 /usr/libexec/gnome-session-ctl --monitor
+   3584    1536 10:26 /usr/libexec/uresourced --user
+   3591    1536 10:26 /usr/libexec/gnome-session-binary --systemd-service --session=gnome
+   3592    1536 10:26 /usr/libexec/gvfsd
+   3598    1536 10:26 /usr/libexec/gvfsd-fuse /run/user/1000/gvfs -f
+   3619    1536 10:26 /usr/bin/gnome-keyring-daemon --start --foreground --components=secrets
+   3620    1536 10:26 /usr/bin/pipewire
+   3621    1536 10:26 /usr/bin/wireplumber
+   3672    1536 10:26 /usr/bin/gnome-shell
+   3721    1536 10:26 /usr/libexec/at-spi-bus-launcher
+   3727    3721 10:26 /usr/bin/dbus-broker-launch --config-file=/usr/share/defaults/at-spi2/accessibility.conf --scope user
+   3728    3727 10:26 dbus-broker --log 4 --controller 9 --machine-id 2b0dc8ea580d4666949e7b2a23cbf53d --max-bytes 100000000000000 --max-fds 6400000 --max-matches 5000000000
+   3730    1536 10:26 /usr/libexec/at-spi2-registryd --use-gnome-session
+   3735    1536 10:26 /usr/libexec/gnome-shell-calendar-server
+   3736    1536 10:26 /usr/libexec/xdg-permission-store
+   3761    1536 10:26 /usr/libexec/evolution-source-registry
+   3770    1536 10:26 /usr/bin/gjs -m /usr/share/gnome-shell/org.gnome.Shell.Notifications
+   3794    1536 10:26 /usr/bin/ibus-daemon --panel disable
+   3797    1536 10:26 /usr/libexec/gsd-a11y-settings
+   3802    1536 10:26 /usr/libexec/gsd-color
+   3804    1536 10:26 /usr/libexec/gsd-datetime
+   3807    1536 10:26 /usr/libexec/gsd-housekeeping
+   3813    1536 10:26 /usr/libexec/gsd-keyboard
+   3818    1536 10:26 /usr/libexec/gsd-media-keys
+   3829    1536 10:26 /usr/libexec/gsd-power
+   3833    1536 10:26 /usr/libexec/gsd-print-notifications
+   3839    3591 10:26 /usr/bin/gnome-software --gapplication-service
+   3842    1536 10:26 /usr/libexec/gsd-rfkill
+   3847    1536 10:26 /usr/libexec/gsd-screensaver-proxy
+   3853    1536 10:26 /usr/libexec/gsd-sharing
+   3858    1536 10:26 /usr/libexec/gsd-smartcard
+   3868    1536 10:26 /usr/libexec/gsd-sound
+   3871    1536 10:26 /usr/libexec/gsd-usb-protection
+   3878    1536 10:26 /usr/libexec/gsd-wacom
+   3881    3591 10:26 /usr/libexec/evolution-data-server/evolution-alarm-notify
+   3901    3591 10:26 /home/lorenzomccray/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox --minimize
+   3907    3591 10:26 /usr/libexec/gsd-disk-utility-notify
+   4026    1536 10:26 /usr/bin/abrt-applet --gapplication-service
+   4031    1536 10:26 /usr/bin/gjs -m /usr/share/gnome-shell/org.gnome.ScreenSaver
+   4032    1536 10:26 /usr/libexec/gnome-user-share-webdav
+   4036    1536 10:26 /usr/libexec/gvfs-udisks2-volume-monitor
+   4043    1536 10:26 /usr/bin/rygel
+   4089    1536 10:26 /usr/libexec/gvfs-mtp-volume-monitor
+   4094    1536 10:26 /usr/libexec/goa-daemon
+   4122    1536 10:26 /usr/libexec/evolution-calendar-factory
+   4129    1536 10:26 /usr/libexec/gvfs-gphoto2-volume-monitor
+   4141    1536 10:26 /usr/libexec/goa-identity-service
+   4186    1536 10:26 /usr/libexec/gvfs-afc-volume-monitor
+   4198    1536 10:26 /usr/bin/httpd -f /usr/share/gnome-user-share/dav_user_2.4.conf -C Listen 38754 -D RequirePasswordAlways
+   4207    4198 10:26 /usr/bin/httpd -f /usr/share/gnome-user-share/dav_user_2.4.conf -C Listen 38754 -D RequirePasswordAlways
+   4208    4198 10:26 /usr/bin/httpd -f /usr/share/gnome-user-share/dav_user_2.4.conf -C Listen 38754 -D RequirePasswordAlways
+   4217    1536 10:26 /usr/libexec/gvfs-goa-volume-monitor
+   4237    1536 10:26 /usr/libexec/evolution-addressbook-factory
+   4357    1536 10:26 /usr/bin/pipewire-pulse
+   4376    1536 10:26 /usr/libexec/dconf-service
+   4409    1536 10:26 /usr/libexec/xdg-desktop-portal
+   4424    1536 10:26 /usr/libexec/xdg-document-portal
+   4527    1536 10:26 /usr/libexec/gsd-printer
+   4804    3672 10:26 /usr/bin/Xwayland :0 -rootless -noreset -accessx -core -auth /run/user/1000/.mutter-Xwaylandauth.TKTNC3 -listenfd 4 -listenfd 5 -displayfd 6 -initfd 7 -byteswappedclients -enable-ei-portal
+   4823    1536 10:26 /usr/libexec/gsd-xsettings
+   4857    3672 10:26 /usr/libexec/mutter-x11-frames
+   5265    3794 10:26 /usr/libexec/ibus-dconf
+   5266    3794 10:26 /usr/libexec/ibus-extension-gtk3
+   5271    1536 10:26 /usr/libexec/xdg-desktop-portal-gnome
+   5278    1536 10:26 /usr/libexec/ibus-portal
+   5287    3794 10:26 /usr/libexec/ibus-engine-simple
+   5306    1536 10:26 /usr/libexec/xdg-desktop-portal-gtk
+   5600    3794 10:27 /usr/bin/python3 /usr/share/ibus-typing-booster/engine/main.py --ibus
+   5650    1536 10:27 /usr/libexec/gvfsd-metadata
+   6762    3672 10:31 /usr/bin/warp-terminal
+   6770    6762 10:31 /opt/warpdotdev/warp-terminal/warp terminal-server --parent-pid=6762
+   6771    6762 10:31 /opt/warpdotdev/warp-terminal/warp installation-detection-server --parent-pid=6762
+   7099    6762 10:31 [ps] <defunct>
+   7105    6770 10:31 bash --rcfile /dev/fd/63
+   7124    6770 10:31 bash --rcfile /dev/fd/63
+   7191    1536 10:31 /opt/warpdotdev/warp-terminal/crashpad_handler --no-rate-limit --database=/home/lorenzomccray/.cache/warp-terminal --metrics-dir=/home/lorenzomccray/.cache/warp-terminal --url=https://o540343.ingest.sentry.io:443/api/5658526/minidump/?sentry_client=sentry.native/0.9.1&sentry_key=0195a81da0714f55a93ee4624825f9ec --attachment=/home/lorenzomccray/.cache/warp-terminal/ba61cd32-e8f6-43bf-0f4d-2b53d1affd0b.run/__sentry-event --attachment=/home/lorenzomccray/.cache/warp-terminal/ba61cd32-e8f6-43bf-0f4d-2b53d1affd0b.run/__sentry-breadcrumb1 --attachment=/home/lorenzomccray/.cache/warp-terminal/ba61cd32-e8f6-43bf-0f4d-2b53d1affd0b.run/__sentry-breadcrumb2 --initial-client-fd=104 --shared-client-connection
+   8045    3672 10:36 /usr/share/code/code
+   8049    8045 10:36 /usr/share/code/code --type=zygote --no-zygote-sandbox
+   8050    8045 10:36 /usr/share/code/code --type=zygote
+   8052    8050 10:36 /usr/share/code/code --type=zygote
+   8071    1536 10:36 /usr/share/code/chrome_crashpad_handler --monitor-self-annotation=ptype=crashpad-handler --no-rate-limit --database=/home/lorenzomccray/.config/Code/Crashpad --url=appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=8535c05f-b937-484d-907e-ec187e3fc1ac&iid=8535c05f-b937-484d-907e-ec187e3fc1ac&sid=8535c05f-b937-484d-907e-ec187e3fc1ac --annotation=_companyName=Microsoft --annotation=_productName=VSCode --annotation=_version=1.103.2 --annotation=lsb-release=Fedora Linux 42 (Workstation Edition) --annotation=plat=Linux --annotation=prod=Electron --annotation=ver=37.2.3 --initial-client-fd=44 --shared-client-connection
+   8088    8049 10:36 /usr/share/code/code --type=zygote --no-zygote-sandbox
+   8093    8045 10:36 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=8071 --enable-crash-reporter=2ae5db89-79fd-4b42-940f-b6c4d9284dab,no_channel --user-data-dir=/home/lorenzomccray/.config/Code --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,18360292011504871433,17108941274348295631,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync --disable-features=CalculateNativeWinOcclusion,FontationsLinuxSystemFonts,ScreenAIOCREnabled,SpareRendererForSitePerProcess --variations-seed-version
+   8149    8052 10:36 /usr/share/code/code --type=zygote
+   8196    8045 10:36 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --dns-result-order=ipv4first --experimental-network-inspection --inspect-port=0 --crashpad-handler-pid=8071 --enable-crash-reporter=2ae5db89-79fd-4b42-940f-b6c4d9284dab,no_channel --user-data-dir=/home/lorenzomccray/.config/Code --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,18360292011504871433,17108941274348295631,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync --disable-features=CalculateNativeWinOcclusion,FontationsLinuxSystemFonts,ScreenAIOCREnabled,SpareRendererForSitePerProcess --variations-seed-version
+   8206    8045 10:36 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=8071 --enable-crash-reporter=2ae5db89-79fd-4b42-940f-b6c4d9284dab,no_channel --user-data-dir=/home/lorenzomccray/.config/Code --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,18360292011504871433,17108941274348295631,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync --disable-features=CalculateNativeWinOcclusion,FontationsLinuxSystemFonts,ScreenAIOCREnabled,SpareRendererForSitePerProcess --variations-seed-version
+   8207    8045 10:36 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=8071 --enable-crash-reporter=2ae5db89-79fd-4b42-940f-b6c4d9284dab,no_channel --user-data-dir=/home/lorenzomccray/.config/Code --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,18360292011504871433,17108941274348295631,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync --disable-features=CalculateNativeWinOcclusion,FontationsLinuxSystemFonts,ScreenAIOCREnabled,SpareRendererForSitePerProcess --variations-seed-version
+   8323    8196 10:36 /usr/share/code/code /usr/share/code/resources/app/extensions/json-language-features/server/dist/node/jsonServerMain --node-ipc --clientProcessId=8196
+   9634    8196 10:40 /home/lorenzomccray/.vscode/extensions/openai.chatgpt-0.4.6-linux-x64/bin/linux-x86_64/codex mcp
+   9950    8052 10:41 /usr/share/code/code --type=zygote
+  10319    8052 10:41 /usr/share/code/code --type=zygote
+  10455    7124 10:42 ps -u 1000 -o pid,ppid,stime,cmd

@@ -1,0 +1,12 @@
+{
+  "title": "smoke",
+  "actions": [
+    {
+      "type": "verify_http",
+      "url": "http://127.0.0.1:8000/health",
+      "expect_json_keys": [
+        "ok"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+● quantum-commander.service - Quantum Commander API (user)
+     Loaded: loaded (/home/lorenzomccray/.config/systemd/user/quantum-commander.service; enabled; preset: disabled)
+    Drop-In: /usr/lib/systemd/user/service.d
+             └─10-timeout-abort.conf
+             /home/lorenzomccray/.config/systemd/user/quantum-commander.service.d
+             └─hardening.conf, override.conf, socket-activation.conf, stop-graceful.conf
+     Active: active (running) since Mon 2025-09-15 10:26:19 EDT; 2h 48min ago
+ Invocation: bf3a67ddfe0e493aaf79dd52a208a192
+TriggeredBy: ● quantum-commander.socket
+   Main PID: 1664 (python)
+      Tasks: 7 (limit: 18017)
+     Memory: 108.2M (peak: 109M)
+        CPU: 2h 44min 61ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/quantum-commander.service
+             └─1664 /home/lorenzomccray/quantum-commander/.venv/bin/python -m uvicorn commander.commander:app --fd 3
+
+Sep 15 10:26:51 fedora python[1664]: INFO:     127.0.0.1:54238 - "GET /ui HTTP/1.1" 200 OK
+Sep 15 10:26:51 fedora python[1664]: INFO:     127.0.0.1:54238 - "GET /qc-icon.png HTTP/1.1" 304 Not Modified
+Sep 15 10:26:51 fedora python[1664]: INFO:     127.0.0.1:54238 - "GET /health HTTP/1.1" 200 OK
+Sep 15 10:26:51 fedora python[1664]: INFO:     127.0.0.1:54252 - "GET /ready HTTP/1.1" 200 OK
+Sep 15 10:26:52 fedora python[1664]: INFO:     127.0.0.1:54252 - "GET /ready HTTP/1.1" 200 OK
+Sep 15 10:26:52 fedora python[1664]: INFO:     ('127.0.0.1', 54268) - "WebSocket /ws" [accepted]
+Sep 15 10:26:52 fedora python[1664]: INFO:     connection open
+Sep 15 10:29:28 fedora python[1664]: INFO:     127.0.0.1:43916 - "GET /sse?message=Check+your+system+and+see+if+everything+is+functional.&provider=openai&model=gpt-4o-mini&temperature=0.2&max_tokens=800&bot_id= HTTP/1.1" 200 OK
+Sep 15 10:29:28 fedora python[1664]: INFO:qc:sse_start
+Sep 15 10:29:28 fedora python[1664]: INFO:qc:sse_done

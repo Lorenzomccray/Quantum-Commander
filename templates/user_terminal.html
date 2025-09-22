@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>User Terminal</title>
+  <link rel="icon" href="/static/qc-icon.png" type="image/png"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.5.0/css/xterm.min.css">
+  <style>
+    :root{--bg:#0b0c10;--panel:#0f1318;--ink:#e6e6e6;--muted:#9aa0a6;--accent:#5eead4}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 ui-sans-serif,system-ui,Inter,Segoe UI,Arial}
+    header{display:flex;gap:8px;align-items:center;padding:10px 12px;background:linear-gradient(180deg,rgba(17,22,29,.95),rgba(17,22,29,.85));border-bottom:1px solid #1e2630;position:sticky;top:0;z-index:2}
+    .badge{padding:4px 8px;border-radius:999px;background:#122027;border:1px solid #1f323d}
+    .spacer{flex:1}
+    #term{position:fixed;inset:58px 12px 12px 12px;border:1px solid #1e2630;border-radius:12px;overflow:hidden}
+  </style>
+</head>
+<body>
+<header>
+  <span class="badge">User PTY</span>
+  <div class="spacer"></div>
+  <span class="badge" id="state">connecting…</span>
+</header>
+<div id="term"></div>
+<script src="https://cdn.jsdelivr.net/npm/xterm@5.5.0/lib/xterm.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.min.js"></script>
+<script>
+const term = new window.Terminal({cursorBlink:true, convertEol:true, fontFamily:"ui-monospace,Menlo,Monaco,Consolas,monospace"});
+let fit = null;
+try { if (window.FitAddon && window.FitAddon.FitAddon) { fit = new window.FitAddon.FitAddon(); term.loadAddon(fit); } } catch(e){}
+term.open(document.getElementById('term'));
+if (fit && typeof fit.fit==='function') { try{ fit.fit(); }catch(e){} }
+window.addEventListener('resize', ()=>{ if(fit&&typeof fit.fit==='function'){ try{ fit.fit(); }catch(e){} } });
+const state = (s)=>{ document.getElementById('state').textContent=s; };
+const params = new URLSearchParams(location.search);
+let ws=null;
+function connect(){
+  const proto = location.protocol==='https:'? 'wss':'ws';
+  const url = proto+'://'+location.host+'/pty';
+  ws = new WebSocket(url); ws.binaryType='arraybuffer';
+  ws.onopen=()=>{ state('connected'); if(fit) try{ fit.fit(); }catch(e){}; const cmd=params.get('cmd'); if(cmd){ ws.send(new TextEncoder().encode(cmd+'\n')); } };
+  ws.onclose=ev=>{ state('disconnected '+(ev.code||'')); };
+  ws.onerror=ev=>{ state('error'); };
+  ws.onmessage=ev=>{ if(ev.data instanceof ArrayBuffer){ term.write(new Uint8Array(ev.data)); } else { term.write(String(ev.data)); } };
+  term.onData(d=>{ if(ws && ws.readyState===1){ ws.send(new TextEncoder().encode(d)); } });
+}
+connect();
+</script>
+</body></html>
+

@@ -1,0 +1,31 @@
+name: Quantum Commander
+command: |
+  if command -v websocat >/dev/null 2>&1; then
+    echo "{\"message\":\"$query\",\"stream\":true${model:+, \"model\":\"$model\"}}" \
+    | websocat ${QC_WS_URL:-ws://127.0.0.1:8000/ws}
+  else
+    python3 - <<'PY'
+import sys, os, json, asyncio, websockets
+msg   = os.environ.get("query","\n").strip() or "ping"
+model = os.environ.get("model","\n").strip()
+payload = {"message": msg, "stream": True}
+if model: payload["model"] = model
+async def run():
+    url = os.environ.get("QC_WS_URL","ws://127.0.0.1:8000/ws")
+    async with websockets.connect(url) as ws:
+        await ws.send(json.dumps(payload))
+        async for raw in ws:
+            data = json.loads(raw)
+            if "delta" in data: print(data["delta"], end="", flush=True)
+            elif data.get("done"): print(); break
+            elif "response" in data: print(data["response"]); break
+asyncio.run(run())
+PY
+  fi
+arguments:
+  - name: query
+    description: "Ask Quantum Commander (natural language)"
+  - name: model
+    optional: true
+    description: "Override model for this call (e.g., gpt-5, gpt-5-mini, gpt-4o, etc.)"
+

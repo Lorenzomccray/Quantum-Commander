@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Header, Depends
 
 from app.settings import settings
 
@@ -19,6 +19,13 @@ except Exception:  # pragma: no cover - keep endpoint resilient
     OPS_DANGER_PATTERNS = []  # type: ignore
 
 router = APIRouter()
+
+def _verify_auth(x_auth_token: str = Header(default="")):
+    """If AUTH_TOKEN is set in env, require it via X-Auth-Token header; otherwise allow."""
+    token = os.getenv("AUTH_TOKEN")
+    if token and x_auth_token != token:
+        raise HTTPException(401, "unauthorized")
+    return True
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -116,7 +123,7 @@ def _policies_info() -> Dict[str, Any]:
 STARTED_AT = time.time()
 
 
-@router.get("/self", summary="Assistant self-status and capabilities")
+@router.get("/self", summary="Assistant self-status and capabilities", dependencies=[Depends(_verify_auth)])
 def self_status() -> Dict[str, Any]:
     identity = {
         "name": os.getenv("ASSISTANT_NAME", "quantum-commander"),
@@ -180,7 +187,7 @@ def _disk_usage(path: Path) -> Dict[str, Any]:
         return {"total": None, "free": None}
 
 
-@router.get("/self/diagnostics", summary="Environment and dependency diagnostics")
+@router.get("/self/diagnostics", summary="Environment and dependency diagnostics", dependencies=[Depends(_verify_auth)])
 def self_diagnostics() -> Dict[str, Any]:
     deps = {
         "git": _ver(["git", "--version"]),

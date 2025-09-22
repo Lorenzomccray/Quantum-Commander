@@ -1,0 +1,28 @@
+commander/routes_bots.py:2:from fastapi import APIRouter, HTTPException
+commander/routes_bots.py:7:router = APIRouter()
+commander/routes_sse.py:2:from fastapi import APIRouter, Request
+commander/routes_sse.py:7:router = APIRouter()
+commander/routes_files.py:2:from fastapi import APIRouter, UploadFile, File, HTTPException
+commander/routes_files.py:7:router = APIRouter()
+commander/routes_kb.py:2:from fastapi import APIRouter, HTTPException
+commander/routes_kb.py:7:router = APIRouter()
+commander/routes_chats.py:2:from fastapi import APIRouter, HTTPException
+commander/routes_chats.py:7:router = APIRouter()
+commander/routes_ensemble.py:1:from fastapi import APIRouter
+commander/routes_ensemble.py:7:router = APIRouter()
+commander/routes_ops.py:1:from fastapi import APIRouter, Header, HTTPException, Depends
+commander/routes_ops.py:6:router = APIRouter()
+commander/routes_pty_ws.py:6:from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException
+commander/routes_pty_ws.py:11:router = APIRouter()
+commander/routes_skills.py:2:from fastapi import APIRouter, HTTPException, Depends, Header
+commander/routes_skills.py:24:router = APIRouter()
+commander/routes_supabase.py:2:from fastapi import APIRouter
+commander/routes_supabase.py:6:router = APIRouter()
+commander/routes_extensions.py:2:from fastapi import APIRouter, HTTPException, Depends, Header
+commander/routes_extensions.py:7:router = APIRouter()
+commander/routes_search.py:2:from fastapi import APIRouter
+commander/routes_search.py:6:router = APIRouter()
+commander/routes_vision.py:2:from fastapi import APIRouter, HTTPException
+commander/routes_vision.py:5:router = APIRouter()
+commander/routes_diagnostics.py:2:from fastapi import APIRouter, Query
+commander/routes_diagnostics.py:6:router = APIRouter()

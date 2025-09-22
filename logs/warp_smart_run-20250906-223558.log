@@ -1,0 +1,145 @@
+== Warp Smart Runner @ 20250906-223558 ==
+App: /home/lorenzomccray/quantum-commander
+Python 3.13.7
+               total        used        free      shared  buff/cache   available
+Mem:            14Gi       4.2Gi       7.6Gi        26Mi       3.1Gi        10Gi
+Swap:          8.0Gi          0B       8.0Gi
+NAME       TYPE      SIZE USED PRIO
+/dev/zram0 partition   8G   0B  100
+service quantum-commander: active
+Python 3.13.7
+[info] installing requirements (quiet)…
+---- /health ----
+{
+  "ok": true,
+  "provider": "openai",
+  "model": "gpt-5",
+  "api_key_set": true,
+  "temperature": 0.2,
+  "max_tokens": 800,
+  "available_providers": [
+    "openai",
+    "anthropic",
+    "groq"
+  ],
+  "available_models": [
+    "gpt-5",
+    "gpt-5-mini",
+    "gpt-5-nano",
+    "gpt-4.1",
+    "gpt-4.1-mini",
+    "gpt-4.1-nano",
+    "o3",
+    "o4-mini",
+    "gpt-4o",
+    "gpt-4o-mini"
+  ],
+  "models_by_provider": {
+    "openai": [
+      "gpt-5",
+      "gpt-5-mini",
+      "gpt-5-nano",
+      "gpt-4.1",
+      "gpt-4.1-mini",
+      "gpt-4.1-nano",
+      "o3",
+      "o4-mini",
+      "gpt-4o",
+      "gpt-4o-mini"
+    ],
+    "anthropic": [
+      "claude-3-5-sonnet-latest",
+      "claude-3-5-haiku-latest",
+      "claude-3-opus-latest"
+    ],
+    "groq": [
+      "llama-3.1-70b-versatile",
+      "llama-3.1-8b-instant"
+    ]
+  },
+  "ws": true,
+  "sse": true,
+  "stores": {
+    "bots": "json-or-supabase",
+    "chats": "json",
+    "kb": "json",
+    "files": "fs"
+  }
+}
+---- /bots (first 5) ----
+[
+  {
+    "id": "6ba37300944b421abcf16c3c29dd9e7c",
+    "name": "Ops & SRE",
+    "emoji": "🛠️",
+    "system_prompt": "You are OpsBot. Manage Fedora/Warp tasks, systemd services, logs, backups, SSL, reverse proxies. Offer safe commands and confirmations before risky actions.",
+    "provider": "openai",
+    "model": "gpt-5",
+    "temperature": 0.2,
+    "max_tokens": 800,
+    "tools_enabled": true,
+    "created_at": 1757183552.311718,
+    "updated_at": 1757183552.3126318
+  },
+  {
+    "id": "b08f48496ff54b22acd9b6e7749bd808",
+    "name": "Content & Make Automator",
+    "emoji": "🎬",
+    "system_prompt": "You are ContentBot. Generate content plans, hooks, captions, and scripts. Trigger Make.com flows; return payloads and webhooks to publish across YouTube/TikTok/FB.",
+    "provider": "openai",
+    "model": "gpt-5",
+    "temperature": 0.2,
+    "max_tokens": 800,
+    "tools_enabled": true,
+    "created_at": 1757183552.3117154,
+    "updated_at": 1757183552.3124423
+  },
+  {
+    "id": "ad057988e66f41c1bfff3476dc0b9982",
+    "name": "Legal & Taxes Counsel",
+    "emoji": "⚖️",
+    "system_prompt": "You are LegalTaxBot. Draft affidavits, FDCPA notices, UCC filings, 1040/990/1120 outlines. Provide checklists and cite sources. Flag when attorney review is required.",
+    "provider": "openai",
+    "model": "gpt-5",
+    "temperature": 0.2,
+    "max_tokens": 800,
+    "tools_enabled": true,
+    "created_at": 1757183552.3117127,
+    "updated_at": 1757183552.3122482
+  },
+  {
+    "id": "bbf9dd70e3684f4f85690e308ab92c8a",
+    "name": "Fundraiser Orchestrator",
+    "emoji": "🎯",
+    "system_prompt": "You are FundraiserBot. Plan campaigns, donor journeys, and Make.com automations. Produce copy (short + long), CTAs, and follow-up cadences. Track KPIs.",
+    "provider": "openai",
+    "model": "gpt-5",
+    "temperature": 0.2,
+    "max_tokens": 800,
+    "tools_enabled": true,
+    "created_at": 1757183552.3117094,
+    "updated_at": 1757183552.3120263
+  },
+  {
+    "id": "44ab3a9a47b548fa9dbad1cdd723738d",
+    "name": "Finance Analyst",
+    "emoji": "💹",
+    "system_prompt": "You are FinanceBot. Build T-bill ladders, repo playbooks, and compensating-balance loan scenarios. Output clear steps, risks, and yields. Ask for missing inputs.",
+    "provider": "openai",
+    "model": "gpt-5",
+    "temperature": 0.2,
+    "max_tokens": 800,
+    "tools_enabled": true,
+    "created_at": 1757183552.3117025,
+    "updated_at": 1757183552.3117216
+  }
+]
+supabase: FAIL -> ModuleNotFoundError: No module named 'websockets.asyncio'
+langchain: OK
+langchain_core: OK
+langchain_openai: OK
+langchain_community: OK
+langchain_anthropic: OK
+langchain_groq: OK
+psycopg2: OK
+== Done. Full log: /home/lorenzomccray/quantum-commander/logs/warp_smart_run-20250906-223558.log ==

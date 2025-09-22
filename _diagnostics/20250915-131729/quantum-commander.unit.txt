@@ -1,0 +1,60 @@
+# /home/lorenzomccray/.config/systemd/user/quantum-commander.service
+[Unit]
+Description=Quantum Commander API (user)
+After=default.target
+
+[Service]
+WorkingDirectory=/home/lorenzomccray/quantum-commander
+EnvironmentFile=/home/lorenzomccray/quantum-commander/.env
+Environment=PYTHONPATH=/home/lorenzomccray/quantum-commander
+ExecStart=/home/lorenzomccray/quantum-commander/.venv/bin/python -m uvicorn commander.commander:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=2
+KillSignal=SIGINT
+
+[Install]
+WantedBy=default.target
+
+# /usr/lib/systemd/user/service.d/10-timeout-abort.conf
+# This file is part of the systemd package.
+# See https://fedoraproject.org/wiki/Changes/Shorter_Shutdown_Timer.
+#
+# To facilitate debugging when a service fails to stop cleanly,
+# TimeoutStopFailureMode=abort is set to "crash" services that fail to stop in
+# the time allotted. This will cause the service to be terminated with SIGABRT
+# and a coredump to be generated.
+#
+# To undo this configuration change, create a mask file:
+#   sudo mkdir -p /etc/systemd/user/service.d
+#   sudo ln -sv /dev/null /etc/systemd/user/service.d/10-timeout-abort.conf
+
+[Service]
+TimeoutStopFailureMode=abort
+
+# /home/lorenzomccray/.config/systemd/user/quantum-commander.service.d/hardening.conf
+[Unit]
+After=graphical-session.target network.target
+StartLimitIntervalSec=30
+StartLimitBurst=8
+
+[Service]
+TimeoutStopSec=5
+
+# /home/lorenzomccray/.config/systemd/user/quantum-commander.service.d/override.conf
+[Service]
+Restart=always
+RestartSec=2
+KillSignal=SIGINT
+
+# /home/lorenzomccray/.config/systemd/user/quantum-commander.service.d/socket-activation.conf
+[Service]
+ExecStart=
+ExecStart=/home/lorenzomccray/quantum-commander/.venv/bin/python -m uvicorn commander.commander:app --fd 3
+
+# /home/lorenzomccray/.config/systemd/user/quantum-commander.service.d/stop-graceful.conf
+[Service]
+# Use a shorter stop timeout and avoid ABRT coredumps on stop
+TimeoutStopSec=5
+TimeoutStopFailureMode=terminate
+# Ensure we send SIGINT first, then SIGTERM after timeout
+KillSignal=SIGINT

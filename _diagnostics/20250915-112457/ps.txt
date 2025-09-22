@@ -1,0 +1,95 @@
+    PID    PPID STIME CMD
+   1536       1 10:26 /usr/lib/systemd/systemd --user
+   1588    1536 10:26 (sd-pam)
+   1664    1536 10:26 /home/lorenzomccray/quantum-commander/.venv/bin/python -m uvicorn commander.commander:app --fd 3
+   3492       1 10:26 /usr/bin/gnome-keyring-daemon --daemonize --login
+   3516    3480 10:26 /usr/libexec/gdm-wayland-session /usr/bin/gnome-session
+   3519    1536 10:26 /usr/bin/dbus-broker-launch --scope user
+   3523    3519 10:26 dbus-broker --log 4 --controller 9 --machine-id 2b0dc8ea580d4666949e7b2a23cbf53d --max-bytes 100000000000000 --max-fds 25000000000000 --max-matches 5000000000
+   3525    3516 10:26 /usr/libexec/gnome-session-binary
+   3582    1536 10:26 /usr/libexec/gnome-remote-desktop-daemon
+   3583    1536 10:26 /usr/libexec/gnome-session-ctl --monitor
+   3584    1536 10:26 /usr/libexec/uresourced --user
+   3591    1536 10:26 /usr/libexec/gnome-session-binary --systemd-service --session=gnome
+   3592    1536 10:26 /usr/libexec/gvfsd
+   3598    1536 10:26 /usr/libexec/gvfsd-fuse /run/user/1000/gvfs -f
+   3619    1536 10:26 /usr/bin/gnome-keyring-daemon --start --foreground --components=secrets
+   3620    1536 10:26 /usr/bin/pipewire
+   3621    1536 10:26 /usr/bin/wireplumber
+   3672    1536 10:26 /usr/bin/gnome-shell
+   3721    1536 10:26 /usr/libexec/at-spi-bus-launcher
+   3727    3721 10:26 /usr/bin/dbus-broker-launch --config-file=/usr/share/defaults/at-spi2/accessibility.conf --scope user
+   3728    3727 10:26 dbus-broker --log 4 --controller 9 --machine-id 2b0dc8ea580d4666949e7b2a23cbf53d --max-bytes 100000000000000 --max-fds 6400000 --max-matches 5000000000
+   3730    1536 10:26 /usr/libexec/at-spi2-registryd --use-gnome-session
+   3735    1536 10:26 /usr/libexec/gnome-shell-calendar-server
+   3736    1536 10:26 /usr/libexec/xdg-permission-store
+   3761    1536 10:26 /usr/libexec/evolution-source-registry
+   3770    1536 10:26 /usr/bin/gjs -m /usr/share/gnome-shell/org.gnome.Shell.Notifications
+   3794    1536 10:26 /usr/bin/ibus-daemon --panel disable
+   3797    1536 10:26 /usr/libexec/gsd-a11y-settings
+   3802    1536 10:26 /usr/libexec/gsd-color
+   3804    1536 10:26 /usr/libexec/gsd-datetime
+   3807    1536 10:26 /usr/libexec/gsd-housekeeping
+   3813    1536 10:26 /usr/libexec/gsd-keyboard
+   3818    1536 10:26 /usr/libexec/gsd-media-keys
+   3829    1536 10:26 /usr/libexec/gsd-power
+   3833    1536 10:26 /usr/libexec/gsd-print-notifications
+   3839    3591 10:26 /usr/bin/gnome-software --gapplication-service
+   3842    1536 10:26 /usr/libexec/gsd-rfkill
+   3847    1536 10:26 /usr/libexec/gsd-screensaver-proxy
+   3853    1536 10:26 /usr/libexec/gsd-sharing
+   3858    1536 10:26 /usr/libexec/gsd-smartcard
+   3868    1536 10:26 /usr/libexec/gsd-sound
+   3871    1536 10:26 /usr/libexec/gsd-usb-protection
+   3878    1536 10:26 /usr/libexec/gsd-wacom
+   3881    3591 10:26 /usr/libexec/evolution-data-server/evolution-alarm-notify
+   3901    3591 10:26 /home/lorenzomccray/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox --minimize
+   3907    3591 10:26 /usr/libexec/gsd-disk-utility-notify
+   4026    1536 10:26 /usr/bin/abrt-applet --gapplication-service
+   4031    1536 10:26 /usr/bin/gjs -m /usr/share/gnome-shell/org.gnome.ScreenSaver
+   4032    1536 10:26 /usr/libexec/gnome-user-share-webdav
+   4036    1536 10:26 /usr/libexec/gvfs-udisks2-volume-monitor
+   4043    1536 10:26 /usr/bin/rygel
+   4089    1536 10:26 /usr/libexec/gvfs-mtp-volume-monitor
+   4094    1536 10:26 /usr/libexec/goa-daemon
+   4122    1536 10:26 /usr/libexec/evolution-calendar-factory
+   4129    1536 10:26 /usr/libexec/gvfs-gphoto2-volume-monitor
+   4141    1536 10:26 /usr/libexec/goa-identity-service
+   4186    1536 10:26 /usr/libexec/gvfs-afc-volume-monitor
+   4198    1536 10:26 /usr/bin/httpd -f /usr/share/gnome-user-share/dav_user_2.4.conf -C Listen 38754 -D RequirePasswordAlways
+   4207    4198 10:26 /usr/bin/httpd -f /usr/share/gnome-user-share/dav_user_2.4.conf -C Listen 38754 -D RequirePasswordAlways
+   4208    4198 10:26 /usr/bin/httpd -f /usr/share/gnome-user-share/dav_user_2.4.conf -C Listen 38754 -D RequirePasswordAlways
+   4217    1536 10:26 /usr/libexec/gvfs-goa-volume-monitor
+   4237    1536 10:26 /usr/libexec/evolution-addressbook-factory
+   4357    1536 10:26 /usr/bin/pipewire-pulse
+   4376    1536 10:26 /usr/libexec/dconf-service
+   4409    1536 10:26 /usr/libexec/xdg-desktop-portal
+   4424    1536 10:26 /usr/libexec/xdg-document-portal
+   4527    1536 10:26 /usr/libexec/gsd-printer
+   4804    3672 10:26 /usr/bin/Xwayland :0 -rootless -noreset -accessx -core -auth /run/user/1000/.mutter-Xwaylandauth.TKTNC3 -listenfd 4 -listenfd 5 -displayfd 6 -initfd 7 -byteswappedclients -enable-ei-portal
+   4823    1536 10:26 /usr/libexec/gsd-xsettings
+   4857    3672 10:26 /usr/libexec/mutter-x11-frames
+   5265    3794 10:26 /usr/libexec/ibus-dconf
+   5266    3794 10:26 /usr/libexec/ibus-extension-gtk3
+   5271    1536 10:26 /usr/libexec/xdg-desktop-portal-gnome
+   5278    1536 10:26 /usr/libexec/ibus-portal
+   5287    3794 10:26 /usr/libexec/ibus-engine-simple
+   5306    1536 10:26 /usr/libexec/xdg-desktop-portal-gtk
+   5600    3794 10:27 /usr/bin/python3 /usr/share/ibus-typing-booster/engine/main.py --ibus
+   5650    1536 10:27 /usr/libexec/gvfsd-metadata
+   6762    3672 10:31 /usr/bin/warp-terminal
+   6770    6762 10:31 /opt/warpdotdev/warp-terminal/warp terminal-server --parent-pid=6762
+   6771    6762 10:31 /opt/warpdotdev/warp-terminal/warp installation-detection-server --parent-pid=6762
+   7099    6762 10:31 [ps] <defunct>
+   7105    6770 10:31 bash --rcfile /dev/fd/63
+   7191    1536 10:31 /opt/warpdotdev/warp-terminal/crashpad_handler --no-rate-limit --database=/home/lorenzomccray/.cache/warp-terminal --metrics-dir=/home/lorenzomccray/.cache/warp-terminal --url=https://o540343.ingest.sentry.io:443/api/5658526/minidump/?sentry_client=sentry.native/0.9.1&sentry_key=0195a81da0714f55a93ee4624825f9ec --attachment=/home/lorenzomccray/.cache/warp-terminal/ba61cd32-e8f6-43bf-0f4d-2b53d1affd0b.run/__sentry-event --attachment=/home/lorenzomccray/.cache/warp-terminal/ba61cd32-e8f6-43bf-0f4d-2b53d1affd0b.run/__sentry-breadcrumb1 --attachment=/home/lorenzomccray/.cache/warp-terminal/ba61cd32-e8f6-43bf-0f4d-2b53d1affd0b.run/__sentry-breadcrumb2 --initial-client-fd=104 --shared-client-connection
+  13685    3592 10:50 /usr/libexec/gvfsd-http --spawner :1.7 /org/gtk/gvfs/exec_spaw/0
+  24524    3592 11:10 /usr/libexec/gvfsd-trash --spawner :1.7 /org/gtk/gvfs/exec_spaw/1
+  24539    1536 11:10 /usr/libexec/localsearch-3
+  24563    3592 11:10 /usr/libexec/gvfsd-recent --spawner :1.7 /org/gtk/gvfs/exec_spaw/2
+  24564    3592 11:10 /usr/libexec/gvfsd-network --spawner :1.7 /org/gtk/gvfs/exec_spaw/3
+  24574    3592 11:10 /usr/libexec/gvfsd-dnssd --spawner :1.7 /org/gtk/gvfs/exec_spaw/4
+  24598    1536 11:10 /usr/bin/python3 /usr/bin/wsdd --no-host --discovery --listen /run/user/1000/gvfsd/wsdd
+  25411    6770 11:16 bash --rcfile /dev/fd/63
+  25980   25411 11:24 bash -lc set -euo pipefail APP="/home/lorenzomccray/quantum-commander" OUT="$APP/_diagnostics" TS="$(date +%Y%m%d-%H%M%S)" B="$OUT/$TS" mkdir -p "$B" cd "$APP"  # --- System info --- { echo "=== SYSTEM ==="; uname -a; echo; hostnamectl || true; echo; cat /etc/os-release; } > "$B/system.txt"  # --- Git state (if repo) --- if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then   { echo "=== GIT STATUS ==="; git status --porcelain=v1 -uall; echo;     echo "=== RECENT COMMITS ==="; git --no-pager log --oneline -n 20; echo;     echo "=== REMOTES ==="; git remote -v; } > "$B/git.txt" fi  # --- Python / venv / requirements --- if [ -d ".venv" ]; then   . .venv/bin/activate   { echo "=== PYTHON ==="; python -V; which python; echo;     echo "=== PIP FREEZE ==="; pip freeze | sort; } > "$B/python.txt" fi cp -f requirements.txt "$B/requirements.txt" 2>/dev/null || true  # --- Services & logs (user units) --- systemctl --user --no-pager --full status quantum-commander > "$B/quantum-commander.status.txt" 2>&1 || true systemctl --user cat quantum-commander > "$B/quantum-commander.unit.txt" 2>&1 || true journalctl --user -u quantum-commander -n 400 --no-pager > "$B/quantum-commander.journal.txt" 2>&1 || true  systemctl --user --no-pager --full status qc-blueprint-watcher.service > "$B/qc-blueprint-watcher.status.txt" 2>&1 || true systemctl --user --no-pager --full status qc-blueprint-watcher.timer > "$B/qc-blueprint-watcher.timer.txt" 2>&1 || true systemctl --user cat qc-blueprint-watcher.service > "$B/qc-blueprint-watcher.unit.txt" 2>&1 || true systemctl --user cat qc-blueprint-watcher.timer > "$B/qc-blueprint-watcher.timer.unit.txt" 2>&1 || true journalctl --user -u qc-blueprint-watcher -n 300 --no-pager > "$B/qc-blueprint-watcher.journal.txt" 2>&1 || true  # --- Processes & ports --- ss -tulpn > "$B/ss.txt" 2>&1 || true ps -u "$(id -u)" -o pid,ppid,stime,cmd > "$B/ps.txt"  # --- App endpoints --- curl -sS http://127.0.0.1:8000/health > "$B/health.json" || echo "{}" > "$B/health.json" curl -sS http://127.0.0.1:8000/bots > "$B/bots.json" || true curl -sS http://127.0.0.1:8000/files > "$B/files.json" || true curl -sS -o /dev/null -w "%{http_code}\n" -X OPTIONS http://127.0.0.1:8000/sse > "$B/sse.http" 2>/dev/null || true  # --- Routes & key files --- find commander -maxdepth 1 -type f -name "routes_*.py" -print > "$B/routes.list.txt" || true grep -R "APIRouter" -n commander > "$B/routes.scan.txt" 2>/dev/null || true sha256sum templates/index.html 2>/dev/null >> "$B/filehashes.txt" || true sha256sum templates/terminal.html 2>/dev/null >> "$B/filehashes.txt" || true sha256sum commander/commander.py commander/agent.py 2>/dev/null >> "$B/filehashes.txt" || true  # --- Blueprint / patches --- cp -f scripts/blueprint_watcher.py "$B/" 2>/dev/null || true cp -f blueprint.json "$B/" 2>/dev/null || true cp -f data/auto_applied.json "$B/" 2>/dev/null || true (ls -l patches/auto || true) > "$B/patches.auto.ls.txt"  # --- .env (redacted safely) --- if [ -f ".env" ]; then   awk 
+  26034   25980 11:24 ps -u 1000 -o pid,ppid,stime,cmd

@@ -1,5 +1,17 @@
 {
   "type": "module",
+  "scripts": {
+    "qc:start": "./bin/qcctl start",
+    "qc:stop": "./bin/qcctl stop",
+    "qc:restart": "./bin/qcctl restart",
+    "qc:status": "./bin/qcctl status",
+    "qc:logs": "./bin/qcctl logs",
+    "qc:log": "./bin/qcctl log",
+    "qc:health": "./bin/qcctl health",
+    "qc:open": "./bin/qcctl open",
+    "qc:enable": "./bin/qcctl enable",
+    "qc:disable": "./bin/qcctl disable"
+  },
   "dependencies": {
     "chalk": "^5.4.1",
     "commander": "^14.0.0",

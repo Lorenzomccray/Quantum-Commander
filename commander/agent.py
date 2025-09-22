@@ -244,13 +244,14 @@ async def stream_agent(message: str, meta: Dict[str, Any] | None = None):
                     # Compatibility fallback: Responses API unavailable in client version.
                     # Perform a non-streaming request and yield the whole text once.
                     try:
-                        text = make_agent.__wrapped__(message=user_prompt, meta={
-                            "provider": "openai",
-                            "model": model,
-                            "temperature": temperature,
-                            "max_tokens": max_tokens,
-                            "system_prompt": sys_prompt,
-                        }) if hasattr(make_agent, "__wrapped__") else None
+                        # Use the synchronous helper to avoid un-awaited coroutine warnings
+                        text = run_once(
+                            provider="openai",
+                            model=model,
+                            message=user_prompt,
+                            temperature=temperature,
+                            max_tokens=max_tokens,
+                        )
                     except Exception:
                         text = None
                     if not text:
@@ -357,7 +358,10 @@ def apply_bot_overrides(payload: dict) -> dict:
         if b.get("id") == bot_id:
             # Inject model/provider/params if not explicitly set by client
             payload.setdefault("provider", b.get("provider","openai"))
-            payload.setdefault("model", b.get("model","gpt-5"))
+            m = b.get("model")
+            if m:
+                payload.setdefault("model", m)
+            # If no model provided by the bot, leave unset to use provider defaults from settings
             payload.setdefault("temperature", b.get("temperature",0.2))
             payload.setdefault("max_tokens", b.get("max_tokens",800))
             # Provide system prompt natively instead of mutating message

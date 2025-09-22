@@ -1,0 +1,52 @@
+Netid State  Recv-Q Send-Q                           Local Address:Port  Peer Address:PortProcess                                                                         
+udp   UNCONN 0      0                                    127.0.0.1:53015      0.0.0.0:*    users:(("rygel",pid=4043,fd=17))                                               
+udp   UNCONN 0      0                                   172.17.0.1:46212      0.0.0.0:*    users:(("rygel",pid=4043,fd=29))                                               
+udp   UNCONN 0      0                                      0.0.0.0:5353       0.0.0.0:*                                                                                   
+udp   UNCONN 0      0                                      0.0.0.0:5355       0.0.0.0:*                                                                                   
+udp   UNCONN 0      0                                      0.0.0.0:38754      0.0.0.0:*    users:(("gnome-user-shar",pid=4032,fd=9))                                      
+udp   UNCONN 0      0                                   172.18.0.1:48362      0.0.0.0:*    users:(("rygel",pid=4043,fd=25))                                               
+udp   UNCONN 0      0                               192.168.12.105:48938      0.0.0.0:*    users:(("rygel",pid=4043,fd=50))                                               
+udp   UNCONN 0      0                                   127.0.0.54:53         0.0.0.0:*                                                                                   
+udp   UNCONN 0      0                                127.0.0.53%lo:53         0.0.0.0:*                                                                                   
+udp   UNCONN 0      0                                    127.0.0.1:323        0.0.0.0:*                                                                                   
+udp   UNCONN 0      0                              239.255.255.250:1900       0.0.0.0:*    users:(("rygel",pid=4043,fd=49))                                               
+udp   UNCONN 0      0                               192.168.12.105:1900       0.0.0.0:*    users:(("rygel",pid=4043,fd=48))                                               
+udp   UNCONN 0      0                              239.255.255.250:1900       0.0.0.0:*    users:(("rygel",pid=4043,fd=28))                                               
+udp   UNCONN 0      0                                   172.17.0.1:1900       0.0.0.0:*    users:(("rygel",pid=4043,fd=27))                                               
+udp   UNCONN 0      0                              239.255.255.250:1900       0.0.0.0:*    users:(("rygel",pid=4043,fd=24))                                               
+udp   UNCONN 0      0                                   172.18.0.1:1900       0.0.0.0:*    users:(("rygel",pid=4043,fd=23))                                               
+udp   UNCONN 0      0                              239.255.255.250:1900       0.0.0.0:*    users:(("rygel",pid=4043,fd=16))                                               
+udp   UNCONN 0      0                                    127.0.0.1:1900       0.0.0.0:*    users:(("rygel",pid=4043,fd=10))                                               
+udp   UNCONN 0      0                                         [::]:5353          [::]:*                                                                                   
+udp   UNCONN 0      0                                         [::]:5355          [::]:*                                                                                   
+udp   UNCONN 0      0                                        [::1]:40609         [::]:*    users:(("rygel",pid=4043,fd=21))                                               
+udp   UNCONN 0      0      [fdfe:5e6c:2e69:98de:2632:fe3d:53:3e09]:48979         [::]:*    users:(("rygel",pid=4043,fd=54))                                               
+udp   UNCONN 0      0                                        [::1]:323           [::]:*                                                                                   
+udp   UNCONN 0      0           [fe80::e951:ba9b:8bee:382b]%wlp2s0:546           [::]:*                                                                                   
+udp   UNCONN 0      0                                        [::1]:1900          [::]:*    users:(("rygel",pid=4043,fd=19))                                               
+udp   UNCONN 0      0                                    [ff05::c]:1900          [::]:*    users:(("rygel",pid=4043,fd=20))                                               
+udp   UNCONN 0      0      [fdfe:5e6c:2e69:98de:2632:fe3d:53:3e09]:1900          [::]:*    users:(("rygel",pid=4043,fd=52))                                               
+udp   UNCONN 0      0                                    [ff05::c]:1900          [::]:*    users:(("rygel",pid=4043,fd=53))                                               
+tcp   LISTEN 0      10                                  172.18.0.1:48362      0.0.0.0:*    users:(("rygel",pid=4043,fd=26))                                               
+tcp   LISTEN 0      10                                   127.0.0.1:53015      0.0.0.0:*    users:(("rygel",pid=4043,fd=18))                                               
+tcp   LISTEN 0      10                                  172.17.0.1:46212      0.0.0.0:*    users:(("rygel",pid=4043,fd=30))                                               
+tcp   LISTEN 0      511                                  127.0.0.1:35685      0.0.0.0:*    users:(("code",pid=8196,fd=73))                                                
+tcp   LISTEN 0      1024                                 127.0.0.1:9277       0.0.0.0:*    users:(("warp",pid=6771,fd=9))                                                 
+tcp   LISTEN 0      128                                    0.0.0.0:22         0.0.0.0:*                                                                                   
+tcp   LISTEN 0      4096                                 127.0.0.1:631        0.0.0.0:*                                                                                   
+tcp   LISTEN 0      4096                             127.0.0.53%lo:53         0.0.0.0:*                                                                                   
+tcp   LISTEN 0      2048                                 127.0.0.1:8000       0.0.0.0:*    users:(("python",pid=1664,fd=15),("python",pid=1664,fd=3))                     
+tcp   LISTEN 0      10                              192.168.12.105:48938      0.0.0.0:*    users:(("rygel",pid=4043,fd=51))                                               
+tcp   LISTEN 0      4096                                127.0.0.54:53         0.0.0.0:*                                                                                   
+tcp   LISTEN 0      4096                                   0.0.0.0:5355       0.0.0.0:*                                                                                   
+tcp   LISTEN 0      50                          [::ffff:127.0.0.1]:52829            *:*    users:(("jetbrains-toolb",pid=3901,fd=136))                                    
+tcp   LISTEN 0      10     [fdfe:5e6c:2e69:98de:2632:fe3d:53:3e09]:48979         [::]:*    users:(("rygel",pid=4043,fd=55))                                               
+tcp   LISTEN 0      4096                        [::ffff:127.0.0.1]:43649            *:*    users:(("jetbrains-toolb",pid=3901,fd=122))                                    
+tcp   LISTEN 0      10                                           *:3389             *:*                                                                                   
+tcp   LISTEN 0      10                                           *:3390             *:*    users:(("gnome-remote-de",pid=3582,fd=22))                                     
+tcp   LISTEN 0      128                                       [::]:22            [::]:*                                                                                   
+tcp   LISTEN 0      10                                       [::1]:40609         [::]:*    users:(("rygel",pid=4043,fd=22))                                               
+tcp   LISTEN 0      4096                                     [::1]:631           [::]:*                                                                                   
+tcp   LISTEN 0      511                                          *:63380            *:*    users:(("code",pid=8196,fd=57))                                                
+tcp   LISTEN 0      511                                          *:38754            *:*    users:(("httpd",pid=4208,fd=4),("httpd",pid=4207,fd=4),("httpd",pid=4198,fd=4))
+tcp   LISTEN 0      4096                                      [::]:5355          [::]:*                                                                                   

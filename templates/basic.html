@@ -24,7 +24,8 @@
       const sum = document.getElementById('self-summary');
       const box = document.getElementById('self-json');
       try{
-        const r = await fetch('/self');
+        const headers = {}; try { const t = (localStorage.getItem('qc_vc_token')||'').trim(); if(t) headers['X-Auth-Token'] = t; } catch(e) {}
+        const r = await fetch('/self', {headers});
         const j = await r.json();
         sum.textContent = j.summary || 'No summary';
         box.textContent = JSON.stringify(j,null,2);

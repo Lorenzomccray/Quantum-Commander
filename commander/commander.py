@@ -400,10 +400,15 @@ async def ws(websocket: WebSocket):
 
 # Minimal CLI entrypoint for `python -m commander.commander web`
 if __name__ == "__main__":
-    import sys
+    import sys, os
     if len(sys.argv) >= 2 and sys.argv[1] == "web":
         import uvicorn
-        uvicorn.run("commander.commander:app", host="127.0.0.1", port=8000, reload=False)
+        host = os.getenv("QC_HOST", "127.0.0.1").strip() or "127.0.0.1"
+        try:
+            port = int(os.getenv("QC_PORT", "8000"))
+        except Exception:
+            port = 8000
+        uvicorn.run("commander.commander:app", host=host, port=port, reload=False)
     else:
         print("Usage: python -m commander.commander web")
 

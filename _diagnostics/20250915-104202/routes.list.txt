@@ -1,0 +1,14 @@
+commander/routes_bots.py
+commander/routes_sse.py
+commander/routes_files.py
+commander/routes_kb.py
+commander/routes_chats.py
+commander/routes_ensemble.py
+commander/routes_ops.py
+commander/routes_pty_ws.py
+commander/routes_skills.py
+commander/routes_supabase.py
+commander/routes_extensions.py
+commander/routes_search.py
+commander/routes_vision.py
+commander/routes_diagnostics.py

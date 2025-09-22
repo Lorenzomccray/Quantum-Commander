@@ -1,0 +1,402 @@
+Sep 13 21:46:11 fedora python[22644]: INFO:     Application startup complete.
+Sep 13 21:46:11 fedora python[22644]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 13 21:46:11 fedora python[22644]: INFO:     ('127.0.0.1', 57656) - "WebSocket /ws" [accepted]
+Sep 13 21:46:11 fedora python[22644]: INFO:     connection closed
+Sep 13 21:46:13 fedora systemd[1533]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 13 21:46:18 fedora systemd[1533]: quantum-commander.service: State 'stop-sigterm' timed out. Killing.
+Sep 13 21:46:18 fedora systemd[1533]: quantum-commander.service: Killing process 22644 (python) with signal SIGKILL.
+Sep 13 21:46:18 fedora systemd[1533]: quantum-commander.service: Killing process 22648 (iou-sqp-22644) with signal SIGKILL.
+Sep 13 21:46:18 fedora systemd[1533]: quantum-commander.service: Killing process 22654 (python) with signal SIGKILL.
+Sep 13 21:46:18 fedora systemd[1533]: quantum-commander.service: Killing process 22655 (python) with signal SIGKILL.
+Sep 13 21:46:18 fedora systemd[1533]: quantum-commander.service: Killing process 22656 (python) with signal SIGKILL.
+Sep 13 21:46:18 fedora systemd[1533]: quantum-commander.service: Main process exited, code=killed, status=9/KILL
+Sep 13 21:46:18 fedora systemd[1533]: quantum-commander.service: Failed with result 'timeout'.
+Sep 13 21:46:18 fedora systemd[1533]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 13 21:46:18 fedora systemd[1533]: quantum-commander.service: Consumed 7.296s CPU time, 53.3M memory peak.
+Sep 13 21:46:18 fedora systemd[1533]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 13 21:46:19 fedora python[22697]: INFO:     Started server process [22697]
+Sep 13 21:46:19 fedora python[22697]: INFO:     Waiting for application startup.
+Sep 13 21:46:19 fedora python[22697]: INFO:qc:app_startup
+Sep 13 21:46:19 fedora python[22697]: INFO:     Application startup complete.
+Sep 13 21:46:19 fedora python[22697]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 13 21:46:19 fedora python[22697]: INFO:     ('127.0.0.1', 57696) - "WebSocket /ws" [accepted]
+Sep 13 21:46:19 fedora python[22697]: INFO:     connection closed
+Sep 13 21:46:19 fedora python[22697]: INFO:httpx:HTTP Request: GET https://pwttyjytvzanpaotrcrw.supabase.co/rest/v1/bots?select=id&limit=1 "HTTP/2 404 Not Found"
+Sep 13 21:46:19 fedora python[22697]: INFO:httpx:HTTP Request: GET https://pwttyjytvzanpaotrcrw.supabase.co/rest/v1/chats?select=id&limit=1 "HTTP/2 404 Not Found"
+Sep 13 21:46:19 fedora python[22697]: INFO:httpx:HTTP Request: GET https://pwttyjytvzanpaotrcrw.supabase.co/rest/v1/kb?select=id&limit=1 "HTTP/2 404 Not Found"
+Sep 13 21:46:20 fedora python[22697]: INFO:httpx:HTTP Request: GET https://pwttyjytvzanpaotrcrw.supabase.co/rest/v1/skills?select=id&limit=1 "HTTP/2 200 OK"
+Sep 13 21:50:07 fedora systemd[1533]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 13 21:50:12 fedora systemd[1533]: quantum-commander.service: State 'stop-sigterm' timed out. Killing.
+Sep 13 21:50:12 fedora systemd[1533]: quantum-commander.service: Killing process 22697 (python) with signal SIGKILL.
+Sep 13 21:50:12 fedora systemd[1533]: quantum-commander.service: Killing process 22704 (python) with signal SIGKILL.
+Sep 13 21:50:12 fedora systemd[1533]: quantum-commander.service: Killing process 22705 (python) with signal SIGKILL.
+Sep 13 21:50:12 fedora systemd[1533]: quantum-commander.service: Killing process 22706 (python) with signal SIGKILL.
+Sep 13 21:50:12 fedora systemd[1533]: quantum-commander.service: Killing process 22708 (n/a) with signal SIGKILL.
+Sep 13 21:50:12 fedora systemd[1533]: quantum-commander.service: Main process exited, code=killed, status=9/KILL
+Sep 13 21:50:12 fedora systemd[1533]: quantum-commander.service: Failed with result 'timeout'.
+Sep 13 21:50:12 fedora systemd[1533]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 13 21:50:12 fedora systemd[1533]: quantum-commander.service: Consumed 3min 52.497s CPU time, 54.9M memory peak.
+Sep 13 21:50:12 fedora systemd[1533]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 13 21:50:13 fedora python[24377]: INFO:     Started server process [24377]
+Sep 13 21:50:13 fedora python[24377]: INFO:     Waiting for application startup.
+Sep 13 21:50:13 fedora python[24377]: INFO:qc:app_startup
+Sep 13 21:50:13 fedora python[24377]: INFO:     Application startup complete.
+Sep 13 21:50:13 fedora python[24377]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 13 21:50:13 fedora sudo[24421]: lorenzomccray : PWD=/home/lorenzomccray/quantum-commander ; USER=root ; COMMAND=/usr/local/bin/qc-rootsh --cwd / --env-json {} id
+Sep 13 21:50:13 fedora systemd[1533]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 13 21:50:13 fedora python[24377]: INFO:     127.0.0.1:44986 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 21:50:13 fedora python[24377]: INFO:     127.0.0.1:45000 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 21:50:13 fedora python[24377]: INFO:     127.0.0.1:44996 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 21:50:13 fedora python[24377]: INFO:     127.0.0.1:45006 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 21:50:13 fedora python[24377]: INFO:     127.0.0.1:45024 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 21:50:13 fedora python[24377]: INFO:     127.0.0.1:45020 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 21:50:13 fedora python[24377]: INFO:     127.0.0.1:45028 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 21:50:13 fedora python[24377]: INFO:     127.0.0.1:45054 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 21:50:13 fedora python[24377]: INFO:     127.0.0.1:45042 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 21:50:13 fedora python[24377]: INFO:     127.0.0.1:45064 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 21:50:13 fedora python[24377]: INFO:     127.0.0.1:45074 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 21:50:13 fedora python[24377]: INFO:     127.0.0.1:45080 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 21:50:13 fedora python[24377]: INFO:httpx:HTTP Request: HEAD https://api.openai.com/ "HTTP/1.1 421 Misdirected Request"
+Sep 13 21:50:13 fedora python[24377]: INFO:     Shutting down
+Sep 13 21:50:13 fedora python[24377]: INFO:httpx:HTTP Request: HEAD https://api.anthropic.com/ "HTTP/1.1 404 Not Found"
+Sep 13 21:50:13 fedora python[24377]: INFO:httpx:HTTP Request: HEAD https://api.deepseek.com/ "HTTP/1.1 404 Not Found"
+Sep 13 21:50:13 fedora python[24377]: INFO:     Waiting for background tasks to complete. (CTRL+C to force quit)
+Sep 13 21:50:13 fedora python[24377]: INFO:httpx:HTTP Request: HEAD https://api.groq.com/ "HTTP/1.1 404 Not Found"
+Sep 13 21:50:13 fedora python[24377]: INFO:     Waiting for application shutdown.
+Sep 13 21:50:13 fedora python[24377]: INFO:qc:app_shutdown
+Sep 13 21:50:13 fedora python[24377]: INFO:     Application shutdown complete.
+Sep 13 21:50:13 fedora python[24377]: INFO:     Finished server process [24377]
+Sep 13 21:50:16 fedora python[24377]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 13 21:50:16 fedora systemd[1533]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 13 21:50:16 fedora systemd[1533]: quantum-commander.service: Consumed 998ms CPU time, 65.5M memory peak.
+Sep 13 21:50:16 fedora systemd[1533]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 13 21:50:16 fedora systemd[1533]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 13 21:50:16 fedora python[24979]: Traceback (most recent call last):
+Sep 13 21:50:16 fedora python[24979]:   File "<frozen runpy>", line 189, in _run_module_as_main
+Sep 13 21:50:16 fedora python[24979]:   File "<frozen runpy>", line 148, in _get_module_details
+Sep 13 21:50:16 fedora python[24979]:   File "<frozen runpy>", line 112, in _get_module_details
+Sep 13 21:50:16 fedora python[24979]:   File "/home/lorenzomccray/quantum-commander/.venv/lib64/python3.13/site-packages/uvicorn/__init__.py", line 1, in <module>
+Sep 13 21:50:16 fedora python[24979]:     from uvicorn.config import Config
+Sep 13 21:50:16 fedora python[24979]:   File "/home/lorenzomccray/quantum-commander/.venv/lib64/python3.13/site-packages/uvicorn/config.py", line 1, in <module>
+Sep 13 21:50:16 fedora python[24979]:     import asyncio
+Sep 13 21:50:16 fedora python[24979]:   File "/usr/lib64/python3.13/asyncio/__init__.py", line 8, in <module>
+Sep 13 21:50:16 fedora python[24979]:     from .base_events import *
+Sep 13 21:50:16 fedora python[24979]:   File "/usr/lib64/python3.13/asyncio/base_events.py", line 16, in <module>
+Sep 13 21:50:16 fedora python[24979]:     import collections
+Sep 13 21:50:16 fedora python[24979]:   File "/usr/lib64/python3.13/collections/__init__.py", line 41, in <module>
+Sep 13 21:50:16 fedora python[24979]:     from reprlib import recursive_repr as _recursive_repr
+Sep 13 21:50:16 fedora python[24979]:   File "<frozen importlib._bootstrap>", line 1357, in _find_and_load
+Sep 13 21:50:16 fedora python[24979]:   File "<frozen importlib._bootstrap>", line 421, in __exit__
+Sep 13 21:50:16 fedora python[24979]:   File "<frozen importlib._bootstrap>", line 378, in release
+Sep 13 21:50:16 fedora python[24979]: KeyboardInterrupt
+Sep 13 21:50:16 fedora systemd[1533]: Stopped quantum-commander.service - Quantum Commander API (user).
+-- Boot 79a629e530f948c4881905ed7aed53e4 --
+Sep 13 21:50:52 fedora systemd[1557]: /home/lorenzomccray/.config/systemd/user/quantum-commander.service.d/hardening.conf:9: Missing '=', ignoring line.
+Sep 13 21:50:52 fedora systemd[1557]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 13 21:50:53 fedora python[1668]: INFO:     Started server process [1668]
+Sep 13 21:50:53 fedora python[1668]: INFO:     Waiting for application startup.
+Sep 13 21:50:53 fedora python[1668]: INFO:qc:app_startup
+Sep 13 21:50:53 fedora python[1668]: INFO:     Application startup complete.
+Sep 13 21:50:53 fedora python[1668]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 13 21:50:53 fedora python[1668]: INFO:httpx:HTTP Request: HEAD https://api.openai.com/ "HTTP/1.1 421 Misdirected Request"
+Sep 13 21:50:53 fedora python[1668]: INFO:httpx:HTTP Request: HEAD https://api.anthropic.com/ "HTTP/1.1 404 Not Found"
+Sep 13 21:50:53 fedora python[1668]: INFO:httpx:HTTP Request: HEAD https://api.deepseek.com/ "HTTP/1.1 404 Not Found"
+Sep 13 21:50:53 fedora python[1668]: INFO:httpx:HTTP Request: HEAD https://api.groq.com/ "HTTP/1.1 404 Not Found"
+Sep 13 21:50:56 fedora python[1668]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 13 21:50:56 fedora python[1668]: INFO:qc:prewarm_model_done
+Sep 13 21:50:56 fedora python[1668]: INFO:qc:prewarm_done
+Sep 13 21:52:22 fedora python[1668]: INFO:     127.0.0.1:57918 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 21:52:22 fedora python[1668]: INFO:     127.0.0.1:57924 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 21:52:22 fedora python[1668]: INFO:     127.0.0.1:57938 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 21:52:22 fedora python[1668]: INFO:     127.0.0.1:57946 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 21:52:29 fedora python[1668]: INFO:     127.0.0.1:52994 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 21:52:30 fedora python[1668]: INFO:     127.0.0.1:52994 - "GET /health HTTP/1.1" 200 OK
+Sep 13 21:52:30 fedora python[1668]: INFO:     127.0.0.1:53008 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 21:52:30 fedora python[1668]: INFO:     127.0.0.1:53012 - "GET /health HTTP/1.1" 200 OK
+Sep 13 21:52:30 fedora python[1668]: INFO:     127.0.0.1:53024 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 21:52:30 fedora python[1668]: INFO:     ('127.0.0.1', 53028) - "WebSocket /ws" [accepted]
+Sep 13 21:52:30 fedora python[1668]: INFO:     connection open
+Sep 13 21:52:30 fedora python[1668]: INFO:     127.0.0.1:53024 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 21:52:31 fedora python[1668]: INFO:     127.0.0.1:53024 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 21:52:31 fedora python[1668]: INFO:     ('127.0.0.1', 53036) - "WebSocket /ws" [accepted]
+Sep 13 21:52:31 fedora python[1668]: INFO:     connection open
+Sep 13 21:57:27 fedora systemd[1557]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 13 21:57:32 fedora systemd[1557]: quantum-commander.service: State 'stop-sigterm' timed out. Killing.
+Sep 13 21:57:32 fedora systemd[1557]: quantum-commander.service: Killing process 1668 (python) with signal SIGKILL.
+Sep 13 21:57:32 fedora systemd[1557]: quantum-commander.service: Killing process 1752 (iou-sqp-1668) with signal SIGKILL.
+Sep 13 21:57:32 fedora systemd[1557]: quantum-commander.service: Main process exited, code=killed, status=9/KILL
+Sep 13 21:57:32 fedora systemd[1557]: quantum-commander.service: Failed with result 'timeout'.
+Sep 13 21:57:32 fedora systemd[1557]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 13 21:57:32 fedora systemd[1557]: quantum-commander.service: Consumed 3min 2.170s CPU time, 113.4M memory peak.
+Sep 13 21:57:32 fedora systemd[1557]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 13 21:57:34 fedora python[6877]: INFO:     Started server process [6877]
+Sep 13 21:57:34 fedora python[6877]: INFO:     Waiting for application startup.
+Sep 13 21:57:34 fedora python[6877]: INFO:qc:app_startup
+Sep 13 21:57:34 fedora python[6877]: INFO:     Application startup complete.
+Sep 13 21:57:34 fedora python[6877]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 13 21:57:35 fedora python[6877]: INFO:httpx:HTTP Request: HEAD https://api.openai.com/ "HTTP/1.1 421 Misdirected Request"
+Sep 13 21:57:35 fedora python[6877]: INFO:httpx:HTTP Request: HEAD https://api.anthropic.com/ "HTTP/1.1 404 Not Found"
+Sep 13 21:57:35 fedora python[6877]: INFO:httpx:HTTP Request: HEAD https://api.deepseek.com/ "HTTP/1.1 404 Not Found"
+Sep 13 21:57:35 fedora python[6877]: INFO:httpx:HTTP Request: HEAD https://api.groq.com/ "HTTP/1.1 404 Not Found"
+Sep 13 21:57:38 fedora python[6877]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 13 21:57:38 fedora python[6877]: INFO:qc:prewarm_model_done
+Sep 13 21:57:38 fedora python[6877]: INFO:qc:prewarm_done
+Sep 13 21:59:26 fedora python[6877]: INFO:     127.0.0.1:52052 - "POST /ops/shell HTTP/1.1" 401 Unauthorized
+Sep 13 22:02:31 fedora python[6877]: INFO:     127.0.0.1:46272 - "GET /ops/health HTTP/1.1" 401 Unauthorized
+Sep 13 22:02:31 fedora python[6877]: INFO:     127.0.0.1:46288 - "POST /ops/shell HTTP/1.1" 401 Unauthorized
+Sep 13 22:04:48 fedora systemd[1557]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 13 22:04:48 fedora python[6877]: INFO:     Shutting down
+Sep 13 22:04:48 fedora python[6877]: INFO:     Waiting for application shutdown.
+Sep 13 22:04:48 fedora python[6877]: INFO:qc:app_shutdown
+Sep 13 22:04:48 fedora python[6877]: INFO:     Application shutdown complete.
+Sep 13 22:04:48 fedora python[6877]: INFO:     Finished server process [6877]
+Sep 13 22:04:48 fedora systemd[1557]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 13 22:04:48 fedora systemd[1557]: quantum-commander.service: Consumed 1.490s CPU time, 62.4M memory peak.
+Sep 13 22:04:48 fedora systemd[1557]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 13 22:04:49 fedora python[7484]: INFO:     Started server process [7484]
+Sep 13 22:04:49 fedora python[7484]: INFO:     Waiting for application startup.
+Sep 13 22:04:49 fedora python[7484]: INFO:qc:app_startup
+Sep 13 22:04:49 fedora python[7484]: INFO:     Application startup complete.
+Sep 13 22:04:49 fedora python[7484]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 13 22:04:49 fedora python[7484]: INFO:httpx:HTTP Request: HEAD https://api.openai.com/ "HTTP/1.1 421 Misdirected Request"
+Sep 13 22:04:49 fedora python[7484]: INFO:httpx:HTTP Request: HEAD https://api.deepseek.com/ "HTTP/1.1 404 Not Found"
+Sep 13 22:04:49 fedora python[7484]: INFO:httpx:HTTP Request: HEAD https://api.anthropic.com/ "HTTP/1.1 404 Not Found"
+Sep 13 22:04:49 fedora python[7484]: INFO:httpx:HTTP Request: HEAD https://api.groq.com/ "HTTP/1.1 404 Not Found"
+Sep 13 22:04:50 fedora python[7484]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 13 22:04:50 fedora python[7484]: INFO:qc:prewarm_model_done
+Sep 13 22:04:50 fedora python[7484]: INFO:qc:prewarm_done
+Sep 13 22:05:16 fedora systemd[1557]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 13 22:05:16 fedora python[7484]: INFO:     Shutting down
+Sep 13 22:05:16 fedora python[7484]: INFO:     Waiting for application shutdown.
+Sep 13 22:05:16 fedora python[7484]: INFO:qc:app_shutdown
+Sep 13 22:05:16 fedora python[7484]: INFO:     Application shutdown complete.
+Sep 13 22:05:16 fedora python[7484]: INFO:     Finished server process [7484]
+Sep 13 22:05:16 fedora systemd[1557]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 13 22:05:16 fedora systemd[1557]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 13 22:05:17 fedora python[7541]: INFO:     Started server process [7541]
+Sep 13 22:05:17 fedora python[7541]: INFO:     Waiting for application startup.
+Sep 13 22:05:17 fedora python[7541]: INFO:qc:app_startup
+Sep 13 22:05:17 fedora python[7541]: INFO:     Application startup complete.
+Sep 13 22:05:17 fedora python[7541]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 13 22:05:17 fedora python[7541]: INFO:httpx:HTTP Request: HEAD https://api.deepseek.com/ "HTTP/1.1 404 Not Found"
+Sep 13 22:05:17 fedora python[7541]: INFO:httpx:HTTP Request: HEAD https://api.openai.com/ "HTTP/1.1 421 Misdirected Request"
+Sep 13 22:05:17 fedora python[7541]: INFO:httpx:HTTP Request: HEAD https://api.anthropic.com/ "HTTP/1.1 404 Not Found"
+Sep 13 22:05:17 fedora python[7541]: INFO:httpx:HTTP Request: HEAD https://api.groq.com/ "HTTP/1.1 404 Not Found"
+Sep 13 22:05:19 fedora python[7541]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 13 22:05:19 fedora python[7541]: INFO:qc:prewarm_model_done
+Sep 13 22:05:19 fedora python[7541]: INFO:qc:prewarm_done
+Sep 13 22:18:37 fedora systemd[1557]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 13 22:18:37 fedora python[7541]: INFO:     Shutting down
+Sep 13 22:18:37 fedora python[7541]: INFO:     Waiting for application shutdown.
+Sep 13 22:18:37 fedora python[7541]: INFO:qc:app_shutdown
+Sep 13 22:18:37 fedora python[7541]: INFO:     Application shutdown complete.
+Sep 13 22:18:37 fedora python[7541]: INFO:     Finished server process [7541]
+Sep 13 22:18:37 fedora systemd[1557]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 13 22:18:37 fedora systemd[1557]: quantum-commander.service: Consumed 2.098s CPU time, 62.2M memory peak.
+Sep 13 22:18:37 fedora systemd[1557]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 13 22:18:37 fedora python[8815]: INFO:     Started server process [8815]
+Sep 13 22:18:37 fedora python[8815]: INFO:     Waiting for application startup.
+Sep 13 22:18:37 fedora python[8815]: INFO:qc:app_startup
+Sep 13 22:18:37 fedora python[8815]: INFO:     Application startup complete.
+Sep 13 22:18:37 fedora python[8815]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 13 22:18:37 fedora python[8815]: INFO:httpx:HTTP Request: HEAD https://api.openai.com/ "HTTP/1.1 421 Misdirected Request"
+Sep 13 22:18:38 fedora python[8815]: INFO:httpx:HTTP Request: HEAD https://api.anthropic.com/ "HTTP/1.1 404 Not Found"
+Sep 13 22:18:38 fedora python[8815]: INFO:httpx:HTTP Request: HEAD https://api.deepseek.com/ "HTTP/1.1 404 Not Found"
+Sep 13 22:18:38 fedora python[8815]: INFO:httpx:HTTP Request: HEAD https://api.groq.com/ "HTTP/1.1 404 Not Found"
+Sep 13 22:18:38 fedora python[8815]: INFO:qc:prewarm_done
+Sep 13 22:18:38 fedora python[8815]: INFO:     127.0.0.1:41090 - "GET /health HTTP/1.1" 200 OK
+Sep 13 22:24:00 fedora python[8815]: INFO:     127.0.0.1:34720 - "GET /ops/health HTTP/1.1" 200 OK
+Sep 13 22:24:00 fedora sudo[9156]: lorenzomccray : PWD=/home/lorenzomccray/quantum-commander ; USER=root ; COMMAND=/usr/local/bin/qc-rootsh --cwd / --env-json {} id
+Sep 13 22:24:00 fedora python[8815]: INFO:     127.0.0.1:34724 - "POST /ops/shell HTTP/1.1" 200 OK
+Sep 13 22:27:55 fedora python[8815]: INFO:     127.0.0.1:46664 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 22:27:55 fedora python[8815]: INFO:     127.0.0.1:46678 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:27:55 fedora python[8815]: INFO:     127.0.0.1:46694 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 22:27:55 fedora python[8815]: INFO:     127.0.0.1:46696 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:27:55 fedora python[8815]: INFO:     127.0.0.1:46708 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 22:27:56 fedora python[8815]: INFO:     127.0.0.1:46708 - "GET /health HTTP/1.1" 200 OK
+Sep 13 22:27:56 fedora python[8815]: INFO:     127.0.0.1:46720 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:27:56 fedora python[8815]: INFO:     ('127.0.0.1', 46734) - "WebSocket /ws" [accepted]
+Sep 13 22:27:56 fedora python[8815]: INFO:     connection open
+Sep 13 22:27:56 fedora python[8815]: INFO:     127.0.0.1:46720 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:29:22 fedora python[8815]: INFO:     127.0.0.1:60280 - "GET /sse?message=Check+and+see+how+much+storage+i+have.&provider=openai&model=gpt-4o-mini&temperature=0.2&max_tokens=800&bot_id= HTTP/1.1" 200 OK
+Sep 13 22:29:22 fedora python[8815]: INFO:qc:sse_start
+Sep 13 22:29:25 fedora python[8815]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 13 22:29:25 fedora python[8815]: INFO:qc:sse_done
+Sep 13 22:29:56 fedora python[8815]: INFO:     127.0.0.1:33098 - "GET /sse?message=ed&provider=openai&model=gpt-4o-mini&temperature=0.2&max_tokens=800&bot_id= HTTP/1.1" 200 OK
+Sep 13 22:29:56 fedora python[8815]: INFO:qc:sse_start
+Sep 13 22:29:58 fedora python[8815]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 13 22:29:58 fedora python[8815]: INFO:qc:sse_done
+Sep 13 22:30:36 fedora python[8815]: INFO:     127.0.0.1:60092 - "GET /sse?message=es&provider=openai&model=gpt-4o-mini&temperature=0.2&max_tokens=800&bot_id= HTTP/1.1" 200 OK
+Sep 13 22:30:36 fedora python[8815]: INFO:qc:sse_start
+Sep 13 22:30:37 fedora python[8815]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 13 22:30:37 fedora python[8815]: INFO:qc:sse_done
+Sep 13 22:32:45 fedora python[8815]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 13 22:32:52 fedora python[8815]: INFO:     127.0.0.1:54552 - "GET /live HTTP/1.1" 200 OK
+Sep 13 22:32:52 fedora python[8815]: INFO:     127.0.0.1:54554 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:33:23 fedora python[8815]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 13 22:55:47 fedora systemd[1557]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 13 22:55:52 fedora systemd[1557]: quantum-commander.service: State 'stop-sigterm' timed out. Killing.
+Sep 13 22:55:52 fedora systemd[1557]: quantum-commander.service: Killing process 8815 (python) with signal SIGKILL.
+Sep 13 22:55:52 fedora systemd[1557]: quantum-commander.service: Killing process 8818 (iou-sqp-8815) with signal SIGKILL.
+Sep 13 22:55:52 fedora systemd[1557]: quantum-commander.service: Main process exited, code=killed, status=9/KILL
+Sep 13 22:55:52 fedora systemd[1557]: quantum-commander.service: Failed with result 'timeout'.
+Sep 13 22:55:52 fedora systemd[1557]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 13 22:55:52 fedora systemd[1557]: quantum-commander.service: Consumed 21min 28.181s CPU time, 64.5M memory peak.
+Sep 13 22:55:52 fedora systemd[1557]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 13 22:55:53 fedora python[10583]: INFO:     Started server process [10583]
+Sep 13 22:55:53 fedora python[10583]: INFO:     Waiting for application startup.
+Sep 13 22:55:53 fedora python[10583]: INFO:qc:app_startup
+Sep 13 22:55:53 fedora python[10583]: INFO:     Application startup complete.
+Sep 13 22:55:53 fedora python[10583]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 13 22:55:53 fedora python[10583]: INFO:     127.0.0.1:35966 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 22:55:53 fedora python[10583]: INFO:     127.0.0.1:35952 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:55:53 fedora python[10583]: INFO:     127.0.0.1:35978 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 22:55:53 fedora python[10583]: INFO:     127.0.0.1:35980 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:55:53 fedora python[10583]: INFO:     127.0.0.1:36002 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 22:55:53 fedora python[10583]: INFO:     127.0.0.1:36000 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:55:53 fedora python[10583]: INFO:     127.0.0.1:36012 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:55:53 fedora python[10583]: INFO:httpx:HTTP Request: HEAD https://api.openai.com/ "HTTP/1.1 421 Misdirected Request"
+Sep 13 22:55:53 fedora python[10583]: INFO:httpx:HTTP Request: HEAD https://api.deepseek.com/ "HTTP/1.1 404 Not Found"
+Sep 13 22:55:53 fedora python[10583]: INFO:httpx:HTTP Request: HEAD https://api.anthropic.com/ "HTTP/1.1 404 Not Found"
+Sep 13 22:55:53 fedora python[10583]: INFO:httpx:HTTP Request: HEAD https://api.groq.com/ "HTTP/1.1 404 Not Found"
+Sep 13 22:55:53 fedora python[10583]: INFO:qc:prewarm_done
+Sep 13 22:55:53 fedora python[10583]: INFO:     127.0.0.1:36016 - "GET /ui HTTP/1.1" 200 OK
+Sep 13 22:55:54 fedora python[10583]: INFO:     127.0.0.1:36028 - "GET /health HTTP/1.1" 200 OK
+Sep 13 22:55:54 fedora python[10583]: INFO:     127.0.0.1:36030 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:55:54 fedora python[10583]: INFO:     ('127.0.0.1', 36044) - "WebSocket /ws" [accepted]
+Sep 13 22:55:54 fedora python[10583]: INFO:     connection open
+Sep 13 22:55:54 fedora python[10583]: INFO:     127.0.0.1:36030 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:55:54 fedora python[10583]: INFO:     127.0.0.1:36030 - "GET /health HTTP/1.1" 200 OK
+Sep 13 22:55:54 fedora python[10583]: INFO:     127.0.0.1:36028 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:55:55 fedora python[10583]: INFO:     127.0.0.1:36028 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:55:55 fedora python[10583]: INFO:     ('127.0.0.1', 36052) - "WebSocket /ws" [accepted]
+Sep 13 22:55:55 fedora python[10583]: INFO:     connection open
+Sep 13 22:57:25 fedora python[10583]: INFO:     127.0.0.1:38066 - "GET /health HTTP/1.1" 200 OK
+Sep 13 22:57:25 fedora python[10583]: INFO:     127.0.0.1:38066 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:57:34 fedora python[10583]: INFO:     127.0.0.1:51768 - "GET /health HTTP/1.1" 200 OK
+Sep 13 22:57:34 fedora python[10583]: INFO:     127.0.0.1:51768 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:57:37 fedora python[10583]: INFO:     127.0.0.1:51768 - "GET /diagnostics/logs?lines=300 HTTP/1.1" 200 OK
+Sep 13 22:57:38 fedora python[10583]: INFO:     127.0.0.1:51768 - "GET /diagnostics/logs?lines=300 HTTP/1.1" 200 OK
+Sep 13 22:57:41 fedora python[10583]: INFO:     127.0.0.1:45452 - "GET /health HTTP/1.1" 200 OK
+Sep 13 22:57:41 fedora python[10583]: INFO:     127.0.0.1:45442 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 22:57:41 fedora python[10583]: INFO:     127.0.0.1:51768 - "GET /diagnostics/sysinfo HTTP/1.1" 200 OK
+Sep 13 22:57:41 fedora python[10583]: INFO:     127.0.0.1:45430 - "GET /diagnostics/service HTTP/1.1" 200 OK
+Sep 13 22:59:10 fedora python[10583]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 13 23:00:42 fedora python[10583]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 13 23:05:00 fedora python[10583]: INFO:     127.0.0.1:57410 - "GET /supabase/status HTTP/1.1" 200 OK
+Sep 13 23:05:05 fedora python[10583]: INFO:     127.0.0.1:57416 - "GET /supabase/status HTTP/1.1" 200 OK
+Sep 13 23:05:09 fedora python[10583]: INFO:     127.0.0.1:57416 - "GET /supabase/status HTTP/1.1" 200 OK
+Sep 13 23:06:16 fedora python[10583]: INFO:     127.0.0.1:57142 - "GET /health HTTP/1.1" 200 OK
+Sep 13 23:06:16 fedora python[10583]: INFO:     127.0.0.1:57142 - "GET /ready HTTP/1.1" 200 OK
+Sep 13 23:06:19 fedora python[10583]: INFO:     127.0.0.1:57142 - "GET /health HTTP/1.1" 200 OK
+Sep 13 23:06:19 fedora python[10583]: INFO:     127.0.0.1:57142 - "GET /ready HTTP/1.1" 200 OK
+Sep 14 00:04:48 fedora systemd[1557]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 14 00:04:53 fedora systemd[1557]: quantum-commander.service: State 'stop-sigterm' timed out. Killing.
+Sep 14 00:04:53 fedora systemd[1557]: quantum-commander.service: Killing process 10583 (python) with signal SIGKILL.
+Sep 14 00:04:53 fedora systemd[1557]: quantum-commander.service: Killing process 10587 (iou-sqp-10583) with signal SIGKILL.
+Sep 14 00:04:53 fedora systemd[1557]: quantum-commander.service: Main process exited, code=killed, status=9/KILL
+Sep 14 00:04:53 fedora systemd[1557]: quantum-commander.service: Failed with result 'timeout'.
+Sep 14 00:04:53 fedora systemd[1557]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 14 00:04:53 fedora systemd[1557]: quantum-commander.service: Consumed 58min 12.426s CPU time, 62.5M memory peak.
+Sep 14 00:04:53 fedora systemd[1557]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 14 00:04:53 fedora python[15820]: INFO:     Started server process [15820]
+Sep 14 00:04:53 fedora python[15820]: INFO:     Waiting for application startup.
+Sep 14 00:04:53 fedora python[15820]: INFO:qc:app_startup
+Sep 14 00:04:53 fedora python[15820]: INFO:     Application startup complete.
+Sep 14 00:04:53 fedora python[15820]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 14 00:04:53 fedora python[15820]: INFO:     127.0.0.1:56060 - "GET /ui HTTP/1.1" 200 OK
+Sep 14 00:04:53 fedora python[15820]: INFO:     127.0.0.1:56072 - "GET /ready HTTP/1.1" 200 OK
+Sep 14 00:04:53 fedora python[15820]: INFO:     127.0.0.1:56076 - "GET /ui HTTP/1.1" 200 OK
+Sep 14 00:04:53 fedora python[15820]: INFO:     127.0.0.1:56084 - "GET /ready HTTP/1.1" 200 OK
+Sep 14 00:04:53 fedora python[15820]: INFO:httpx:HTTP Request: HEAD https://api.openai.com/ "HTTP/1.1 421 Misdirected Request"
+Sep 14 00:04:53 fedora python[15820]: INFO:     127.0.0.1:56092 - "GET /ui HTTP/1.1" 200 OK
+Sep 14 00:04:53 fedora python[15820]: INFO:httpx:HTTP Request: HEAD https://api.anthropic.com/ "HTTP/1.1 404 Not Found"
+Sep 14 00:04:53 fedora python[15820]: INFO:httpx:HTTP Request: HEAD https://api.deepseek.com/ "HTTP/1.1 404 Not Found"
+Sep 14 00:04:53 fedora python[15820]: INFO:httpx:HTTP Request: HEAD https://api.groq.com/ "HTTP/1.1 404 Not Found"
+Sep 14 00:04:53 fedora python[15820]: INFO:qc:prewarm_done
+Sep 14 00:04:54 fedora python[15820]: INFO:     127.0.0.1:56092 - "GET /health HTTP/1.1" 200 OK
+Sep 14 00:04:54 fedora python[15820]: INFO:     127.0.0.1:56098 - "GET /ready HTTP/1.1" 200 OK
+Sep 14 00:04:54 fedora python[15820]: INFO:     127.0.0.1:56098 - "GET /ready HTTP/1.1" 200 OK
+Sep 14 00:04:54 fedora python[15820]: INFO:     ('127.0.0.1', 56102) - "WebSocket /ws" [accepted]
+Sep 14 00:04:54 fedora python[15820]: INFO:     connection open
+Sep 14 00:05:58 fedora python[15820]: INFO:     127.0.0.1:53558 - "GET /sse?message=Check+and+make+sure+all+is+right+with+your+setup.&provider=openai&model=gpt-4o-mini&temperature=0.2&max_tokens=800&bot_id= HTTP/1.1" 200 OK
+Sep 14 00:05:58 fedora python[15820]: INFO:qc:sse_start
+Sep 14 00:06:00 fedora python[15820]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 14 00:06:00 fedora python[15820]: INFO:qc:sse_done
+Sep 14 00:07:09 fedora python[15820]: INFO:     127.0.0.1:36924 - "GET /sse?message=ectly&provider=openai&model=gpt-4o-mini&temperature=0.2&max_tokens=800&bot_id= HTTP/1.1" 200 OK
+Sep 14 00:07:09 fedora python[15820]: INFO:qc:sse_start
+Sep 14 00:07:10 fedora python[15820]: INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Sep 14 00:07:10 fedora python[15820]: INFO:qc:sse_done
+Sep 14 00:08:24 fedora python[15820]: INFO:     127.0.0.1:48944 - "GET /ui HTTP/1.1" 200 OK
+Sep 14 22:14:54 fedora systemd[1557]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 14 22:14:59 fedora systemd[1557]: quantum-commander.service: State 'stop-sigterm' timed out. Killing.
+Sep 14 22:14:59 fedora systemd[1557]: quantum-commander.service: Killing process 15820 (python) with signal SIGKILL.
+Sep 14 22:14:59 fedora systemd[1557]: quantum-commander.service: Killing process 15828 (python) with signal SIGKILL.
+Sep 14 22:14:59 fedora systemd[1557]: quantum-commander.service: Main process exited, code=killed, status=9/KILL
+Sep 14 22:14:59 fedora systemd[1557]: quantum-commander.service: Failed with result 'timeout'.
+Sep 14 22:14:59 fedora systemd[1557]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 14 22:14:59 fedora systemd[1557]: quantum-commander.service: Consumed 12min 4.890s CPU time, 67.8M memory peak.
+Sep 14 22:14:59 fedora systemd[1557]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 14 22:15:00 fedora python[18212]: INFO:     Started server process [18212]
+Sep 14 22:15:00 fedora python[18212]: INFO:     Waiting for application startup.
+Sep 14 22:15:00 fedora python[18212]: INFO:qc:app_startup
+Sep 14 22:15:00 fedora python[18212]: INFO:     Application startup complete.
+Sep 14 22:15:00 fedora python[18212]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 14 22:15:00 fedora python[18212]: INFO:     ('127.0.0.1', 52214) - "WebSocket /ws" [accepted]
+Sep 14 22:15:00 fedora python[18212]: INFO:     connection closed
+Sep 14 22:16:20 fedora systemd[1557]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 14 22:16:25 fedora systemd[1557]: quantum-commander.service: State 'stop-sigterm' timed out. Killing.
+Sep 14 22:16:25 fedora systemd[1557]: quantum-commander.service: Killing process 18212 (python) with signal SIGKILL.
+Sep 14 22:16:25 fedora systemd[1557]: quantum-commander.service: Main process exited, code=killed, status=9/KILL
+Sep 14 22:16:25 fedora systemd[1557]: quantum-commander.service: Failed with result 'timeout'.
+Sep 14 22:16:25 fedora systemd[1557]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 14 22:16:25 fedora systemd[1557]: quantum-commander.service: Consumed 1min 24.631s CPU time, 70.9M memory peak.
+Sep 14 22:16:25 fedora systemd[1557]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 14 22:16:25 fedora python[19727]: INFO:     Started server process [19727]
+Sep 14 22:16:25 fedora python[19727]: INFO:     Waiting for application startup.
+Sep 14 22:16:25 fedora python[19727]: INFO:qc:app_startup
+Sep 14 22:16:25 fedora python[19727]: INFO:     Application startup complete.
+Sep 14 22:16:25 fedora python[19727]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 14 22:16:25 fedora python[19727]: INFO:     ('127.0.0.1', 59944) - "WebSocket /ws" [accepted]
+Sep 14 22:16:25 fedora python[19727]: INFO:     connection closed
+Sep 14 22:32:45 fedora systemd[1557]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 14 22:32:50 fedora systemd[1557]: quantum-commander.service: State 'stop-sigterm' timed out. Killing.
+Sep 14 22:32:50 fedora systemd[1557]: quantum-commander.service: Killing process 19727 (python) with signal SIGKILL.
+Sep 14 22:32:50 fedora systemd[1557]: quantum-commander.service: Killing process 19762 (iou-sqp-19727) with signal SIGKILL.
+Sep 14 22:32:50 fedora systemd[1557]: quantum-commander.service: Killing process 19952 (python) with signal SIGKILL.
+Sep 14 22:32:50 fedora systemd[1557]: quantum-commander.service: Killing process 19953 (python) with signal SIGKILL.
+Sep 14 22:32:50 fedora systemd[1557]: quantum-commander.service: Killing process 19954 (python) with signal SIGKILL.
+Sep 14 22:32:50 fedora systemd[1557]: quantum-commander.service: Killing process 19955 (python) with signal SIGKILL.
+Sep 14 22:32:50 fedora systemd[1557]: quantum-commander.service: Main process exited, code=killed, status=9/KILL
+Sep 14 22:32:50 fedora systemd[1557]: quantum-commander.service: Failed with result 'timeout'.
+Sep 14 22:32:50 fedora systemd[1557]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 14 22:32:50 fedora systemd[1557]: quantum-commander.service: Consumed 16min 20.482s CPU time, 50.6M memory peak.
+-- Boot d2de5024019a40298aba4e2f96af9294 --
+Sep 15 10:26:19 fedora systemd[1536]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 15 10:26:19 fedora systemd[1536]: Stopping quantum-commander.service - Quantum Commander API (user)...
+Sep 15 10:26:19 fedora systemd[1536]: Stopped quantum-commander.service - Quantum Commander API (user).
+Sep 15 10:26:19 fedora systemd[1536]: Started quantum-commander.service - Quantum Commander API (user).
+Sep 15 10:26:20 fedora python[1664]: INFO:     Started server process [1664]
+Sep 15 10:26:20 fedora python[1664]: INFO:     Waiting for application startup.
+Sep 15 10:26:20 fedora python[1664]: INFO:qc:app_startup
+Sep 15 10:26:20 fedora python[1664]: INFO:     Application startup complete.
+Sep 15 10:26:20 fedora python[1664]: INFO:     Uvicorn running on socket ('127.0.0.1', 8000) (Press CTRL+C to quit)
+Sep 15 10:26:20 fedora python[1664]: INFO:httpx:HTTP Request: HEAD https://api.openai.com/ "HTTP/1.1 421 Misdirected Request"
+Sep 15 10:26:20 fedora python[1664]: INFO:httpx:HTTP Request: HEAD https://api.anthropic.com/ "HTTP/1.1 404 Not Found"
+Sep 15 10:26:20 fedora python[1664]: INFO:httpx:HTTP Request: HEAD https://api.deepseek.com/ "HTTP/1.1 404 Not Found"
+Sep 15 10:26:20 fedora python[1664]: INFO:httpx:HTTP Request: HEAD https://api.groq.com/ "HTTP/1.1 404 Not Found"
+Sep 15 10:26:20 fedora python[1664]: INFO:qc:prewarm_done
+Sep 15 10:26:44 fedora python[1664]: INFO:     127.0.0.1:44238 - "GET /ui HTTP/1.1" 200 OK
+Sep 15 10:26:44 fedora python[1664]: INFO:     127.0.0.1:44246 - "GET /ready HTTP/1.1" 200 OK
+Sep 15 10:26:44 fedora python[1664]: INFO:     127.0.0.1:44254 - "GET /ui HTTP/1.1" 200 OK
+Sep 15 10:26:44 fedora python[1664]: INFO:     127.0.0.1:44266 - "GET /ready HTTP/1.1" 200 OK
+Sep 15 10:26:51 fedora python[1664]: INFO:     127.0.0.1:54238 - "GET /ui HTTP/1.1" 200 OK
+Sep 15 10:26:51 fedora python[1664]: INFO:     127.0.0.1:54238 - "GET /qc-icon.png HTTP/1.1" 304 Not Modified
+Sep 15 10:26:51 fedora python[1664]: INFO:     127.0.0.1:54238 - "GET /health HTTP/1.1" 200 OK
+Sep 15 10:26:51 fedora python[1664]: INFO:     127.0.0.1:54252 - "GET /ready HTTP/1.1" 200 OK
+Sep 15 10:26:52 fedora python[1664]: INFO:     127.0.0.1:54252 - "GET /ready HTTP/1.1" 200 OK
+Sep 15 10:26:52 fedora python[1664]: INFO:     ('127.0.0.1', 54268) - "WebSocket /ws" [accepted]
+Sep 15 10:26:52 fedora python[1664]: INFO:     connection open
+Sep 15 10:29:28 fedora python[1664]: INFO:     127.0.0.1:43916 - "GET /sse?message=Check+your+system+and+see+if+everything+is+functional.&provider=openai&model=gpt-4o-mini&temperature=0.2&max_tokens=800&bot_id= HTTP/1.1" 200 OK
+Sep 15 10:29:28 fedora python[1664]: INFO:qc:sse_start
+Sep 15 10:29:28 fedora python[1664]: INFO:qc:sse_done

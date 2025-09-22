@@ -1,0 +1,12 @@
+[
+  {
+    "id": "sk_seed_advisor_diagnose",
+    "name": "advisor_diagnose",
+    "cmd": "set -o pipefail\necho \"=== System Advisor Diagnose ===\"\necho \"Timestamp: $(date -Is)\"\necho\necho \"## Host\"\nhostnamectl 2>/dev/null || true\necho\necho \"## OS\"\ncat /etc/os-release 2>/dev/null || true\necho\necho \"## Kernel / Uptime\"\nuname -a\nuptime -p\necho\necho \"## CPU\"\nlscpu 2>/dev/null | sed -n '1,25p' || true\necho\necho \"## Memory\"\nfree -h || true\necho\necho \"## Disks\"\nlsblk -o NAME,FSTYPE,SIZE,TYPE,MOUNTPOINT 2>/dev/null | sed -n '1,80p' || true\necho\necho \"## Filesystem usage\"\ndf -hT | sed -n '1,80p' || true\necho\necho \"## Top processes (by CPU)\"\nps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head -n 15 || true\necho\necho \"## GPUs\"\n( command -v nvidia-smi >/dev/null 2>&1 && nvidia-smi -L ) || ( lspci | grep -Ei 'vga|3d|2d' ) || true\necho\necho \"## Python\"\n( python3 --version 2>/dev/null; pip --version 2>/dev/null ) || true\necho\necho \"## Node\"\n( node --version 2>/dev/null; npm --version 2>/dev/null ) || true\necho\necho \"## Containers\"\n( docker info 2>/dev/null | sed -n '1,30p' ) || echo 'docker not available'\n( podman info 2>/dev/null | sed -n '1,30p' ) || echo 'podman not available'\necho\necho \"## DNF updates (may take a bit)\"\n( dnf -q check-update || true )\necho\necho \"## Services failed\"\nsystemctl --failed --no-legend 2>/dev/null || true\necho\necho \"## Network\"\nip -br address 2>/dev/null || true\n( ping -c 1 -W 2 1.1.1.1 >/dev/null 2>&1 && echo 'Outbound: OK' ) || echo 'Outbound: FAIL'\n",
+    "is_root": false,
+    "tags": ["advisor", "diagnostics", "system"],
+    "created_at": 0,
+    "updated_at": 0,
+    "usage": 0
+  }
+]
