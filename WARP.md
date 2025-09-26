@@ -5,9 +5,9 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 Command cheat sheet
 
 Python backend (FastAPI + UI)
-- Setup (recommended virtualenv)
-  - python -m venv .venv && source .venv/bin/activate
-  - pip install -U pip wheel && pip install -r requirements.txt
+- Setup (uv recommended)
+  - uv venv .venv && source .venv/bin/activate
+  - uv pip install -r requirements.txt
 - Run locally (serves UI and APIs)
   - python -m commander.commander web
     - UI: http://127.0.0.1:8000/ui  • Basic check: http://127.0.0.1:8000/basic  • Health: http://127.0.0.1:8000/health
@@ -22,7 +22,7 @@ Python backend (FastAPI + UI)
     - curl -F "file=@/etc/hosts" http://127.0.0.1:8000/files/upload
 
 Tests (pytest)
-- Install: pip install pytest
+- Install: uv pip install pytest
 - Run all: pytest -q
 - Run one file: pytest tests/test_ws.py -q
 - Run one test: pytest tests/test_ws.py::test_ws_stream_and_cancel -q
