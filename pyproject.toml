@@ -15,17 +15,37 @@ dependencies = [
   "fastapi>=0.111",
   "uvicorn[standard]>=0.30",
   "pydantic>=2.7",
+  "httpx>=0.27",
 ]
 
 [project.optional-dependencies]
 dev = [
   "pytest>=7",
   "pytest-asyncio>=0.23",
-  "httpx>=0.27",
+  "pytest-cov>=4",
+  "respx>=0.20.2",
   "anyio>=4",
   "black>=24.3",
   "ruff>=0.4",
+  "mypy>=1.7",
 ]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.black]
+line-length = 100
+
+[tool.mypy]
+python_version = "3.13"
+namespace_packages = true
+mypy_path = ["src"]
+warn_unused_configs = true
+check_untyped_defs = true
+disallow_untyped_defs = true
+strict_optional = true
+show_error_codes = true
 
 [tool.pytest.ini_options]
 minversion = "7.0"
@@ -33,4 +53,8 @@ addopts = "-q"
 testpaths = ["tests"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src"]
+# Use src-layout: explicitly include both packages so imports like `backend.*` resolve
+packages = [
+  "src/backend",
+  "src/fix_assistant",
+]

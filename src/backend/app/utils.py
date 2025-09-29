@@ -1,14 +1,17 @@
-from pathlib import Path
+from __future__ import annotations
+
 import json
 import os
 import tempfile
+from pathlib import Path
+from typing import Any
 
 
 def ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
 
-def read_json(path: Path) -> dict:
+def read_json(path: Path) -> dict[str, Any]:
     try:
         with path.open("r", encoding="utf-8") as f:
             return json.load(f)
@@ -19,7 +22,7 @@ def read_json(path: Path) -> dict:
         return {}
 
 
-def write_json_atomic(path: Path, data: dict) -> None:
+def write_json_atomic(path: Path, data: dict[str, Any]) -> None:
     ensure_dir(path.parent)
     # Write to a temporary file in the same directory, then atomically replace
     with tempfile.NamedTemporaryFile("w", delete=False, dir=str(path.parent)) as tmp:

@@ -1,12 +1,20 @@
 from __future__ import annotations
 
+import json
+
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from pydantic import BaseModel, ValidationError
 
 ws_router = APIRouter()
 
 
+class WsMessage(BaseModel):
+    type: str
+    content: str
+
+
 @ws_router.websocket("/assistant/ws")
-async def assistant_ws(websocket: WebSocket):
+async def assistant_ws(websocket: WebSocket) -> None:
     # Validate required query params
     provider = websocket.query_params.get("provider")
     model = websocket.query_params.get("model")
@@ -18,9 +26,27 @@ async def assistant_ws(websocket: WebSocket):
 
     await websocket.accept()
     try:
-        # Minimal echo loop
+        # Enhanced echo loop with schema validation
         while True:
-            msg = await websocket.receive_text()
-            await websocket.send_text(f"echo: {msg}")
+            msg_text = await websocket.receive_text()
+            try:
+                parsed = json.loads(msg_text)
+                validated = WsMessage(**parsed)
+                await websocket.send_text(
+                    json.dumps(
+                        {
+                            "type": "echo",
+                            "content": f"Received {validated.type}: {validated.content}",
+                            "provider": provider,
+                            "model": model,
+                        }
+                    )
+                )
+            except (json.JSONDecodeError, ValidationError) as e:
+                await websocket.send_text(
+                    json.dumps(
+                        {"type": "error", "content": f"Invalid message format: {type(e).__name__}"}
+                    )
+                )
     except WebSocketDisconnect:
         return
